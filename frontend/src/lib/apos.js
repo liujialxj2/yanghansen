@@ -5,9 +5,16 @@
 
 import apostrophe from '@apostrophecms/apostrophe-astro';
 
+// 获取环境变量中的API密钥
+// 使用process.env，而不是硬编码值
+const APOS_KEY = process.env.APOS_EXTERNAL_FRONT_KEY || 'hansen-website-key';
+
 // 创建ApostropheCMS API客户端
 export const apos = apostrophe.createApi({
-  baseUrl: 'http://localhost:3000'
+  baseUrl: 'http://localhost:3000',
+  apiKeys: {
+    'hansen-website-key': APOS_KEY
+  }
 });
 
 /**

@@ -7,6 +7,20 @@ export default {
     pluralLabel: 'Articles',
     shortcut: 'Shift+Alt+A'
   },
+  commands: {
+    add: {
+      type: 'item',
+      label: 'Add Article'
+    },
+    edit: {
+      type: 'item',
+      label: 'Edit Article'
+    },
+    manage: {
+      type: 'item',
+      label: 'Manage Articles'
+    }
+  },
   fields: {
     add: {
       category: {

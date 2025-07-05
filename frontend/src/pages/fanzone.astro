@@ -1,0 +1,724 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import { getLocalizedContent as t } from "../lib/multilingual.js";
+import { apos } from '../lib/apos';
+import HeroSection from "../components/HeroSection.astro";
+
+// 粉丝互动板块类型
+const interactionCategories = [
+  { id: 'all', name: t('fanzone.categories.all') },
+  { id: 'photos', name: t('fanzone.categories.photos') },
+  { id: 'comments', name: t('fanzone.categories.comments') },
+  { id: 'events', name: t('fanzone.categories.events') }
+];
+
+// 模拟粉丝活动数据
+const fanEvents = [
+  {
+    id: 1,
+    title: t('fanzone.events.meetup.title'),
+    description: t('fanzone.events.meetup.description'),
+    date: '2025-07-20',
+    location: t('fanzone.events.meetup.location'),
+    image: '/images/video-thumbnail.jpg',
+    status: 'upcoming'
+  },
+  {
+    id: 2,
+    title: t('fanzone.events.signing.title'),
+    description: t('fanzone.events.signing.description'),
+    date: '2025-08-15',
+    location: t('fanzone.events.signing.location'),
+    image: '/images/video-thumbnail.jpg',
+    status: 'upcoming'
+  },
+  {
+    id: 3,
+    title: t('fanzone.events.charity.title'),
+    description: t('fanzone.events.charity.description'),
+    date: '2025-06-05',
+    location: t('fanzone.events.charity.location'),
+    image: '/images/video-thumbnail.jpg',
+    status: 'past'
+  }
+];
+
+// 模拟粉丝内容
+const fanContent = [
+  {
+    id: 1,
+    type: 'photos',
+    username: 'basketball_fan1',
+    content: '/images/video-thumbnail.jpg',
+    caption: t('fanzone.posts.photo1'),
+    likes: 245,
+    comments: 42,
+    date: '2025-06-18'
+  },
+  {
+    id: 2,
+    type: 'comments',
+    username: 'hansenfan99',
+    content: t('fanzone.posts.comment1'),
+    likes: 126,
+    comments: 15,
+    date: '2025-06-15'
+  },
+  {
+    id: 3,
+    type: 'photos',
+    username: 'hoops_lover',
+    content: '/images/video-thumbnail.jpg',
+    caption: t('fanzone.posts.photo2'),
+    likes: 378,
+    comments: 31,
+    date: '2025-06-10'
+  },
+  {
+    id: 4,
+    type: 'comments',
+    username: 'trailblazers_fan',
+    content: t('fanzone.posts.comment2'),
+    likes: 89,
+    comments: 7,
+    date: '2025-06-05'
+  }
+];
+---
+
+<MainLayout title={t('fanzone.page_title')} description={t('fanzone.page_description')}>
+  <!-- 英雄区域 -->
+  <HeroSection
+    title={t('fanzone.hero_title')}
+    subtitle={t('fanzone.hero_subtitle')}
+    backgroundImage="/images/hero-bg.jpg"
+    height="medium"
+    alignment="center"
+  />
+
+  <!-- 内容区域 -->
+  <section class="section fanzone-section">
+    <div class="container">
+      <div class="columns">
+        <!-- 左侧主内容区域 -->
+        <div class="column is-8">
+          <!-- 互动标签栏 -->
+          <div class="interaction-tabs">
+            <div class="tabs is-medium">
+              <ul>
+                {interactionCategories.map((category) => (
+                  <li class={category.id === 'all' ? "is-active" : ""}>
+                    <a href={`#${category.id}`} data-category={category.id}>
+                      {category.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <!-- 粉丝内容发布框 -->
+          <div class="fan-post-box">
+            <div class="field">
+              <div class="control">
+                <textarea class="textarea" placeholder={t('fanzone.share_placeholder')}></textarea>
+              </div>
+            </div>
+            <div class="post-actions">
+              <div class="buttons">
+                <button class="button is-small">
+                  <span class="icon"><i class="fas fa-image"></i></span>
+                  <span>{t('fanzone.add_photo')}</span>
+                </button>
+                <button class="button is-small">
+                  <span class="icon"><i class="fas fa-video"></i></span>
+                  <span>{t('fanzone.add_video')}</span>
+                </button>
+              </div>
+              <button class="button is-primary">{t('fanzone.post_button')}</button>
+            </div>
+          </div>
+
+          <!-- 粉丝内容展示 -->
+          <div class="fan-content">
+            {fanContent.map((item) => (
+              <div class="fan-post-card" data-type={item.type}>
+                <div class="fan-post-header">
+                  <div class="user-info">
+                    <div class="user-avatar">
+                      <img src={`https://i.pravatar.cc/40?u=${item.username}`} alt={item.username} />
+                    </div>
+                    <div class="user-name">
+                      <strong>{item.username}</strong>
+                      <small class="post-date">{item.date}</small>
+                    </div>
+                  </div>
+                  <div class="post-menu">
+                    <button class="button is-small is-text">
+                      <span class="icon"><i class="fas fa-ellipsis-h"></i></span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="fan-post-content">
+                  {item.type === 'photos' ? (
+                    <div class="fan-post-image">
+                      <img src={item.content} alt={item.caption} />
+                      <p class="image-caption">{item.caption}</p>
+                    </div>
+                  ) : (
+                    <div class="fan-post-text">
+                      <p>{item.content}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div class="fan-post-actions">
+                  <div class="action-buttons">
+                    <button class="button is-small is-text">
+                      <span class="icon"><i class="far fa-heart"></i></span>
+                      <span>{item.likes}</span>
+                    </button>
+                    <button class="button is-small is-text">
+                      <span class="icon"><i class="far fa-comment"></i></span>
+                      <span>{item.comments}</span>
+                    </button>
+                    <button class="button is-small is-text">
+                      <span class="icon"><i class="far fa-share-square"></i></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <!-- 加载更多按钮 -->
+            <div class="load-more has-text-centered">
+              <button class="button is-outlined is-primary">{t('fanzone.load_more')}</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧边栏 -->
+        <div class="column is-4">
+          <!-- 粉丝活动日历 -->
+          <div class="fan-events">
+            <h3 class="sidebar-title">{t('fanzone.events_title')}</h3>
+            
+            {fanEvents.map((event) => (
+              <div class={`event-card ${event.status}`}>
+                <div class="event-date">
+                  <div class="date-number">{event.date.split('-')[2]}</div>
+                  <div class="date-month">{new Date(event.date).toLocaleDateString('zh', {month: 'short'})}</div>
+                </div>
+                <div class="event-details">
+                  <h4 class="event-title">{event.title}</h4>
+                  <div class="event-location">
+                    <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <span>{event.location}</span>
+                  </div>
+                  <div class="event-actions">
+                    <button class="button is-small is-primary is-outlined">
+                      {t('fanzone.event_details')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            <div class="has-text-centered mt-4">
+              <a href="#" class="button is-primary">{t('fanzone.all_events')}</a>
+            </div>
+          </div>
+          
+          <!-- 粉丝排行榜 -->
+          <div class="fan-leaderboard">
+            <h3 class="sidebar-title">{t('fanzone.top_fans')}</h3>
+            <div class="leaderboard-list">
+              <div class="leaderboard-item">
+                <div class="rank">1</div>
+                <div class="user-avatar">
+                  <img src="https://i.pravatar.cc/40?u=topfan1" alt="Top Fan 1" />
+                </div>
+                <div class="user-info">
+                  <div class="username">basketball_fan1</div>
+                  <div class="points">1,254 {t('fanzone.points')}</div>
+                </div>
+              </div>
+              <div class="leaderboard-item">
+                <div class="rank">2</div>
+                <div class="user-avatar">
+                  <img src="https://i.pravatar.cc/40?u=topfan2" alt="Top Fan 2" />
+                </div>
+                <div class="user-info">
+                  <div class="username">hansenfan99</div>
+                  <div class="points">982 {t('fanzone.points')}</div>
+                </div>
+              </div>
+              <div class="leaderboard-item">
+                <div class="rank">3</div>
+                <div class="user-avatar">
+                  <img src="https://i.pravatar.cc/40?u=topfan3" alt="Top Fan 3" />
+                </div>
+                <div class="user-info">
+                  <div class="username">hoops_lover</div>
+                  <div class="points">745 {t('fanzone.points')}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 加入社区 -->
+          <div class="join-community">
+            <h3>{t('fanzone.join_title')}</h3>
+            <p>{t('fanzone.join_description')}</p>
+            <button class="button is-primary is-fullwidth">{t('fanzone.sign_up')}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .fanzone-section {
+    background-color: var(--color-dark);
+    padding: 3rem 1.5rem;
+  }
+  
+  /* 标签栏样式 */
+  .interaction-tabs {
+    margin-bottom: 2rem;
+  }
+  
+  .tabs ul {
+    border-bottom-color: var(--color-bg-light);
+  }
+  
+  .tabs li a {
+    color: var(--color-gray);
+    border-bottom-color: transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .tabs li a:hover {
+    color: var(--color-white);
+    border-bottom-color: var(--color-gray);
+  }
+  
+  .tabs li.is-active a {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    border-bottom-width: 3px;
+  }
+  
+  /* 发布框样式 */
+  .fan-post-box {
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .textarea {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    resize: none;
+    min-height: 100px;
+  }
+  
+  .textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.125em rgba(224, 58, 62, 0.25);
+  }
+  
+  .textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  
+  /* 粉丝内容卡片 */
+  .fan-post-card {
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .fan-post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .fan-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 0.75rem;
+  }
+  
+  .user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .user-name {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name strong {
+    color: var(--color-white);
+  }
+  
+  .post-date {
+    color: var(--color-gray);
+    font-size: 0.8rem;
+  }
+  
+  .fan-post-content {
+    margin-bottom: 1rem;
+  }
+  
+  .fan-post-image {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  
+  .fan-post-image img {
+    width: 100%;
+    display: block;
+  }
+  
+  .image-caption {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+  
+  .fan-post-text p {
+    color: var(--color-white);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .fan-post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .action-buttons button {
+    color: var(--color-gray);
+    transition: color 0.3s ease;
+  }
+  
+  .action-buttons button:hover {
+    color: var(--color-primary);
+  }
+  
+  .load-more {
+    margin: 2rem 0;
+  }
+  
+  /* 侧边栏样式 */
+  .sidebar-title {
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+  
+  .sidebar-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.25em;
+    height: 1em;
+    width: 4px;
+    background-color: var(--color-primary);
+    border-radius: 2px;
+  }
+  
+  /* 活动卡片 */
+  .fan-events {
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .event-card {
+    display: flex;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .event-card:hover {
+    transform: translateX(5px);
+  }
+  
+  .event-card.past {
+    opacity: 0.6;
+  }
+  
+  .event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    padding: 0.5rem;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 6px;
+    margin-right: 1rem;
+  }
+  
+  .date-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  
+  .date-month {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+  
+  .event-details {
+    flex-grow: 1;
+  }
+  
+  .event-title {
+    color: var(--color-white);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .event-location {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .event-location .icon {
+    margin-right: 0.5rem;
+    color: var(--color-primary);
+  }
+  
+  /* 粉丝排行榜 */
+  .fan-leaderboard {
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .leaderboard-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+  }
+  
+  .leaderboard-item:hover {
+    transform: translateX(5px);
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .rank {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    margin-right: 1rem;
+  }
+  
+  .leaderboard-item .user-info {
+    flex-grow: 1;
+  }
+  
+  .username {
+    color: var(--color-white);
+    font-weight: 600;
+  }
+  
+  .points {
+    color: var(--color-gray);
+    font-size: 0.85rem;
+  }
+  
+  /* 加入社区 */
+  .join-community {
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  
+  .join-community h3 {
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .join-community p {
+    color: var(--color-gray);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  
+  /* 响应式调整 */
+  @media screen and (max-width: 768px) {
+    .fanzone-section .columns {
+      flex-direction: column-reverse;
+    }
+    
+    .tabs li a {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .interaction-tabs {
+      margin-bottom: 1.5rem;
+    }
+    
+    .fan-post-box {
+      padding: 1rem;
+    }
+    
+    .fan-events, .fan-leaderboard, .join-community {
+      margin-bottom: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 加载Font Awesome图标
+    if (!document.querySelector('link[href*="font-awesome"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+      document.head.appendChild(link);
+    }
+    
+    // 标签切换功能
+    const categoryTabs = document.querySelectorAll('.tabs li a');
+    const fanPosts = document.querySelectorAll('.fan-post-card');
+    
+    categoryTabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // 更新激活标签
+        categoryTabs.forEach(t => t.parentElement.classList.remove('is-active'));
+        tab.parentElement.classList.add('is-active');
+        
+        const selectedCategory = tab.dataset.category;
+        
+        if (selectedCategory === 'all') {
+          // 显示所有内容
+          fanPosts.forEach(post => {
+            post.style.display = 'block';
+          });
+        } else {
+          // 仅显示选中类型的内容
+          fanPosts.forEach(post => {
+            if (post.dataset.type === selectedCategory) {
+              post.style.display = 'block';
+            } else {
+              post.style.display = 'none';
+            }
+          });
+        }
+      });
+    });
+    
+    // 点赞功能模拟
+    const likeButtons = document.querySelectorAll('.action-buttons button:first-child');
+    
+    likeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const icon = button.querySelector('i');
+        const countSpan = button.querySelector('span:last-child');
+        const count = parseInt(countSpan.textContent);
+        
+        if (icon.classList.contains('far')) {
+          // 点赞
+          icon.classList.remove('far');
+          icon.classList.add('fas');
+          icon.style.color = 'var(--color-primary)';
+          countSpan.textContent = count + 1;
+        } else {
+          // 取消点赞
+          icon.classList.remove('fas');
+          icon.classList.add('far');
+          icon.style.color = '';
+          countSpan.textContent = count - 1;
+        }
+      });
+    });
+    
+    // 加载更多功能
+    const loadMoreButton = document.querySelector('.load-more button');
+    
+    if (loadMoreButton) {
+      loadMoreButton.addEventListener('click', () => {
+        loadMoreButton.classList.add('is-loading');
+        
+        // 模拟加载延迟
+        setTimeout(() => {
+          loadMoreButton.classList.remove('is-loading');
+          // 实际项目中应该从后端获取更多数据并添加到DOM
+        }, 1500);
+      });
+    }
+  });
+</script> 

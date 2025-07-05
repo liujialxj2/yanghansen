@@ -44,6 +44,10 @@ const {
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // 修复Vite HMR连接问题
+      window.VITE_DEV_SERVER_URL = window.location.origin;
+    </script>
   </head>
   <body class="has-navbar-fixed-top">
     <NavBar />

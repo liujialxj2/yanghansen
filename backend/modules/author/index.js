@@ -8,17 +8,20 @@ export default {
     pluralLabel: {
       zh: '作者',
       en: 'Authors'
-    }
-  },
-  commands: {
-    add: {
-      label: 'Add Author'
     },
-    edit: {
-      label: 'Edit Author'
-    },
-    manage: {
-      label: 'Manage Authors'
+    commands: {
+      add: {
+        label: 'Add Author',
+        type: 'item'
+      },
+      edit: {
+        label: 'Edit Author',
+        type: 'item'
+      },
+      manage: {
+        label: 'Manage Authors',
+        type: 'item'
+      }
     }
   },
   fields: {

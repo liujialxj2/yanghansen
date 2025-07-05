@@ -1,3 +1,4 @@
+---
 import { t } from "i18next";
 
 export interface Props {
@@ -30,6 +31,7 @@ const alignmentClasses = {
 };
 
 const textAlignment = alignmentClasses[alignment] || "has-text-left";
+---
 
 <section 
   class={`hero is-${height}`} 
@@ -72,7 +74,7 @@ const textAlignment = alignmentClasses[alignment] || "has-text-left";
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
-    color: white;
+    color: var(--color-white);
     overflow: hidden;
   }
   
@@ -109,6 +111,7 @@ const textAlignment = alignmentClasses[alignment] || "has-text-left";
   .hero-content {
     max-width: 800px;
     margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-out;
   }
   
   .title {
@@ -118,7 +121,7 @@ const textAlignment = alignmentClasses[alignment] || "has-text-left";
     line-height: 1.1;
     margin-bottom: 1.5rem;
     text-shadow: 0px 2px 4px rgba(0,0,0,0.3);
-    color: white;
+    color: var(--color-white);
   }
   
   .subtitle {
@@ -139,11 +142,13 @@ const textAlignment = alignmentClasses[alignment] || "has-text-left";
     font-weight: 600;
     letter-spacing: 0.5px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--color-primary);
   }
   
   .button.is-primary.is-large:hover {
     transform: translateY(-3px);
     box-shadow: 0 7px 14px rgba(0,0,0,0.25);
+    background-color: #c0282d;
   }
   
   .social-links {
@@ -154,19 +159,50 @@ const textAlignment = alignmentClasses[alignment] || "has-text-left";
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    animation: fadeInLeft 1s ease-out 0.5s both;
   }
   
   .social-links a {
-    color: white;
+    color: var(--color-white);
     font-size: 1.5rem;
     opacity: 0.8;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.3);
   }
   
   .social-links a:hover {
-    color: var(--color-primary);
+    color: var(--color-white);
     opacity: 1;
     transform: scale(1.1);
+    background-color: var(--color-primary);
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
   
   @media screen and (max-width: 768px) {
@@ -178,11 +214,27 @@ const textAlignment = alignmentClasses[alignment] || "has-text-left";
     .social-links {
       bottom: 1.5rem;
       left: 1.5rem;
+      flex-direction: row;
     }
     
     .hero-content.has-text-right,
     .hero-content.has-text-left {
       text-align: center;
+    }
+    
+    .hero-content {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .title {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .subtitle {
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 </style> 

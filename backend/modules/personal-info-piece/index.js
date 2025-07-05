@@ -16,12 +16,15 @@ export default {
   },
   commands: {
     add: {
+      type: 'item',
       label: 'Add Personal Info'
     },
     edit: {
+      type: 'item',
       label: 'Edit Personal Info'
     },
     manage: {
+      type: 'item',
       label: 'Manage Personal Info'
     }
   },

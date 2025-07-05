@@ -65,11 +65,24 @@ import LanguageSwitcher from "./LanguageSwitcher.astro";
         });
       });
     }
+    
+    // 当前页面链接高亮
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.navbar-item').forEach(link => {
+      const linkPath = link.getAttribute('href');
+      if (linkPath && currentPath.includes(linkPath) && linkPath !== '/') {
+        link.classList.add('is-active');
+      } else if (linkPath === '/' && currentPath === '/') {
+        link.classList.add('is-active');
+      }
+    });
   });
 </script>
 
 <style>
   .navbar {
+    background-color: rgba(16, 16, 16, 0.95);
+    backdrop-filter: blur(10px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
   
@@ -78,6 +91,7 @@ import LanguageSwitcher from "./LanguageSwitcher.astro";
     font-weight: 500;
     font-family: var(--font-heading);
     transition: all 0.3s ease;
+    padding: 0.75rem 1rem;
   }
   
   .navbar-item:hover,
@@ -89,6 +103,11 @@ import LanguageSwitcher from "./LanguageSwitcher.astro";
   .navbar-item.is-active {
     color: var(--color-primary) !important;
     background-color: transparent !important;
+    border-bottom: 2px solid var(--color-primary);
+  }
+  
+  .navbar-brand .navbar-item {
+    padding: 0.5rem 1rem;
   }
   
   .navbar-burger {
@@ -101,11 +120,29 @@ import LanguageSwitcher from "./LanguageSwitcher.astro";
   
   .navbar-burger span {
     background-color: var(--color-white);
+    height: 2px;
+  }
+  
+  .button.is-primary {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
   }
   
   @media screen and (max-width: 1023px) {
     .navbar-menu.is-active {
       background-color: var(--color-dark);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    }
+    
+    .navbar-item.is-active {
+      border-bottom: none;
+      border-left: 4px solid var(--color-primary);
+      padding-left: calc(1rem - 4px);
+    }
+    
+    .navbar-end {
+      padding: 1rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
   }
 </style> 

@@ -1,92 +1,37 @@
 ---
 import { getLocalizedContent as t, localizePath } from "../lib/multilingual.js";
-
-const { aposData } = Astro.props;
-const { footerGroup: footer = {}, brandingGroup: branding = {} } =
-  aposData.global || {};
-const currentYear = new Date().getFullYear();
-const footerNav = aposData.home?._children || [];
-
-// Social platform icons mapping
-const platformIcons = {
-  facebook: 'facebook',
-  twitter: 'x-twitter',
-  instagram: 'instagram',
-  linkedin: 'linkedin',
-  youtube: 'youtube',
-  github: 'github',
-  tiktok: 'tiktok',
-  pinterest: 'pinterest',
-  discord: 'discord',
-  mastodon: 'mastodon'
-} as const;
-
-// Get theme-based classes
-const footerClasses = [
-  'footer-modern',
-  footer.footerBackgroundColor
-    ? `has-background-${footer.footerBackgroundColor}`
-    : '',
-  footer.footerTextColor ? `has-text-${footer.footerTextColor}` : '',
-  footer.footerLayout ? `layout-${footer.footerLayout}` : 'layout-grid'
-]
-  .filter(Boolean)
-  .join(' ');
-
-const linkClasses = [
-  `has-text-${footer.footerLinkColor || 'grey-light'}`,
-  'hover-fade'
-].join(' ');
-
-// Extract footer sections
-const footerSections = footer.footerSections || [];
-
-// Get link attributes for external links
-const getLinkAttributes = (url: string, openInNewTab?: boolean) => ({
-  ...(openInNewTab || url.startsWith('http')
-    ? {
-        target: '_blank',
-        rel: 'noopener noreferrer'
-      }
-    : {})
-});
-
-const socialPosition = footer.socialPosition || 'top';
-const { renderBranding } = useSiteConfig(aposData.global);
 ---
 
 <footer class="footer">
   <div class="container">
     <div class="columns is-multiline">
+      <!-- Logo和简介 -->
       <div class="column is-4">
         <div class="footer-brand">
           <a href={localizePath("/")}>
-            <img src="/images/logo.svg" alt="Hansen Yang Logo" width="180" />
+            <img src="/images/logo.svg" alt="Hansen Yang Logo" />
           </a>
-          <p class="mt-4">
-            {t("footer.description")}
-          </p>
         </div>
-        <div class="social-icons mt-4">
+        <div class="footer-description mt-4">
+          <p>{t("footer.description")}</p>
+        </div>
+        <div class="social-icons mt-5">
           <a href="https://weibo.com/" target="_blank" rel="noopener noreferrer" aria-label="Weibo">
-            <span class="icon"><i class="fab fa-weibo"></i></span>
+            <i class="fab fa-weibo"></i>
           </a>
           <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <span class="icon"><i class="fab fa-instagram"></i></span>
+            <i class="fab fa-instagram"></i>
           </a>
           <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-            <span class="icon"><i class="fab fa-twitter"></i></span>
-          </a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-            <span class="icon"><i class="fab fa-youtube"></i></span>
+            <i class="fab fa-twitter"></i>
           </a>
         </div>
       </div>
       
+      <!-- 快速链接 -->
       <div class="column is-2">
-        <h3 class="footer-title">{t("footer.navigation")}</h3>
+        <div class="footer-title">{t("footer.links")}</div>
         <ul class="footer-links">
-          <li><a href={localizePath("/")}>{t("nav.home")}</a></li>
           <li><a href={localizePath("/about")}>{t("nav.about")}</a></li>
           <li><a href={localizePath("/career")}>{t("nav.career")}</a></li>
           <li><a href={localizePath("/news")}>{t("nav.news")}</a></li>
@@ -95,31 +40,62 @@ const { renderBranding } = useSiteConfig(aposData.global);
         </ul>
       </div>
       
-      <div class="column is-3">
-        <h3 class="footer-title">{t("footer.more")}</h3>
+      <!-- 其他链接 -->
+      <div class="column is-2">
+        <div class="footer-title">{t("footer.more")}</div>
         <ul class="footer-links">
           <li><a href={localizePath("/media")}>{t("footer.media")}</a></li>
-          <li><a href={localizePath("/contact")}>{t("footer.contact")}</a></li>
-          <li><a href={localizePath("/privacy")}>{t("footer.privacy")}</a></li>
-          <li><a href={localizePath("/terms")}>{t("footer.terms")}</a></li>
+          <li><a href={localizePath("/press")}>{t("footer.press")}</a></li>
+          <li><a href={localizePath("/sponsors")}>{t("footer.sponsors")}</a></li>
+          <li><a href={localizePath("/charity")}>{t("footer.charity")}</a></li>
         </ul>
       </div>
       
-      <div class="column is-3">
-        <h3 class="footer-title">{t("footer.contact_us")}</h3>
-        <p class="contact-info">
+      <!-- 联系信息 -->
+      <div class="column is-4">
+        <div class="footer-title">{t("footer.contact")}</div>
+        <div class="contact-info">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <a href="mailto:info@hansenyang.com">info@hansenyang.com</a>
-        </p>
-        <p class="contact-info">
+          <span>contact@hansenyang.com</span>
+        </div>
+        <div class="contact-info">
           <span class="icon"><i class="fas fa-phone"></i></span>
-          <span>+86 xxx xxxx xxxx</span>
-        </p>
+          <span>+86 123 456 7890</span>
+        </div>
+        <div class="contact-info">
+          <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+          <span>{t("footer.address")}</span>
+        </div>
+        <div class="newsletter-signup mt-4">
+          <div class="footer-title is-smaller">{t("footer.newsletter")}</div>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" type="email" placeholder={t("footer.email_placeholder")}>
+            </div>
+            <div class="control">
+              <button class="button is-primary">
+                {t("footer.subscribe")}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     
+    <!-- 版权信息 -->
     <div class="footer-bottom">
-      <p>© 2025 {t("footer.copyright")}</p>
+      <div class="columns is-vcentered">
+        <div class="column">
+          <p>&copy; {new Date().getFullYear()} Hansen Yang. {t("footer.rights")}</p>
+        </div>
+        <div class="column has-text-right is-hidden-mobile">
+          <ul class="footer-legal">
+            <li><a href={localizePath("/privacy")}>{t("footer.privacy")}</a></li>
+            <li><a href={localizePath("/terms")}>{t("footer.terms")}</a></li>
+            <li><a href={localizePath("/sitemap")}>{t("footer.sitemap")}</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
@@ -145,6 +121,17 @@ const { renderBranding } = useSiteConfig(aposData.global);
     margin-bottom: 1.5rem;
   }
   
+  .footer-title.is-smaller {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .footer-description {
+    color: var(--color-gray);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
   .footer-links {
     list-style: none;
     padding: 0;
@@ -158,6 +145,7 @@ const { renderBranding } = useSiteConfig(aposData.global);
   .footer-links a {
     color: var(--color-gray);
     transition: color 0.3s ease;
+    font-size: 0.95rem;
   }
   
   .footer-links a:hover {
@@ -172,30 +160,82 @@ const { renderBranding } = useSiteConfig(aposData.global);
   .social-icons a {
     color: var(--color-gray);
     font-size: 1.5rem;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.05);
   }
   
   .social-icons a:hover {
-    color: var(--color-primary);
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    transform: translateY(-3px);
   }
   
   .contact-info {
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
+    color: var(--color-gray);
   }
   
   .contact-info .icon {
-    margin-right: 0.5rem;
+    margin-right: 0.75rem;
     color: var(--color-primary);
+    width: 20px;
+    text-align: center;
+  }
+  
+  .newsletter-signup .input {
+    background-color: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.1);
+    color: var(--color-white);
+  }
+  
+  .newsletter-signup .input::placeholder {
+    color: rgba(255,255,255,0.5);
+  }
+  
+  .newsletter-signup .input:focus {
+    border-color: var(--color-primary);
+    box-shadow: none;
+  }
+  
+  .newsletter-signup .button {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
   }
   
   .footer-bottom {
     margin-top: 3rem;
     padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
     font-size: 0.9rem;
+  }
+  
+  .footer-legal {
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-legal li {
+    margin-left: 1.5rem;
+  }
+  
+  .footer-legal a {
+    color: var(--color-gray);
+    transition: color 0.3s ease;
+  }
+  
+  .footer-legal a:hover {
+    color: var(--color-primary);
   }
   
   @media screen and (max-width: 768px) {
@@ -208,10 +248,25 @@ const { renderBranding } = useSiteConfig(aposData.global);
       margin-bottom: 1rem;
     }
     
+    .footer-bottom {
+      text-align: center;
+    }
+    
     .column.is-4,
-    .column.is-2,
-    .column.is-3 {
+    .column.is-2 {
       width: 100%;
+    }
+    
+    .social-icons {
+      justify-content: center;
+    }
+    
+    .footer-brand {
+      text-align: center;
+    }
+    
+    .footer-brand img {
+      margin: 0 auto;
     }
   }
 </style>
@@ -219,9 +274,11 @@ const { renderBranding } = useSiteConfig(aposData.global);
 <script>
   // 加载Font Awesome图标
   document.addEventListener('DOMContentLoaded', () => {
+    if (!document.querySelector('link[href*="font-awesome"]')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
     document.head.appendChild(link);
+    }
   });
 </script>

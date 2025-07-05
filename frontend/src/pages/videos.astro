@@ -1,0 +1,536 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import { getLocalizedContent as t } from "../lib/multilingual.js";
+import { apos } from '../lib/apos';
+import HeroSection from "../components/HeroSection.astro";
+
+// 获取视频分类和内容
+// 实际项目中这些数据应该从ApostropheCMS获取
+// 目前使用模拟数据进行开发
+const videoCategories = [
+  { id: 'highlights', name: t('videos.categories.highlights') },
+  { id: 'interviews', name: t('videos.categories.interviews') },
+  { id: 'documentary', name: t('videos.categories.documentary') },
+  { id: 'training', name: t('videos.categories.training') }
+];
+
+// 模拟视频数据
+const videos = [
+  {
+    id: 1,
+    title: t('videos.highlight1.title'),
+    description: t('videos.highlight1.description'),
+    thumbnail: '/images/video-thumbnail.jpg',
+    duration: '2:45',
+    date: '2025-06-15',
+    category: 'highlights',
+    videoId: 'abc123'
+  },
+  {
+    id: 2,
+    title: t('videos.interview1.title'),
+    description: t('videos.interview1.description'),
+    thumbnail: '/images/video-thumbnail.jpg',
+    duration: '15:20',
+    date: '2025-05-28',
+    category: 'interviews',
+    videoId: 'def456'
+  },
+  {
+    id: 3,
+    title: t('videos.documentary1.title'),
+    description: t('videos.documentary1.description'),
+    thumbnail: '/images/video-thumbnail.jpg',
+    duration: '28:10',
+    date: '2025-04-10',
+    category: 'documentary',
+    videoId: 'ghi789'
+  },
+  {
+    id: 4,
+    title: t('videos.training1.title'),
+    description: t('videos.training1.description'),
+    thumbnail: '/images/video-thumbnail.jpg',
+    duration: '10:30',
+    date: '2025-06-05',
+    category: 'training',
+    videoId: 'jkl012'
+  }
+];
+
+// 当前选中的分类
+const activeCategory = 'highlights';
+---
+
+<MainLayout title={t('videos.page_title')} description={t('videos.page_description')}>
+  <!-- 英雄区域 -->
+  <HeroSection
+    title={t('videos.hero_title')}
+    subtitle={t('videos.hero_subtitle')}
+    backgroundImage="/images/video-thumbnail.jpg"
+    height="medium"
+    alignment="center"
+  />
+
+  <!-- 内容区域 -->
+  <section class="section video-section">
+    <div class="container">
+      <!-- 分类过滤器 -->
+      <div class="video-categories">
+        <div class="tabs is-centered is-medium">
+          <ul>
+            {videoCategories.map((category) => (
+              <li class={category.id === activeCategory ? "is-active" : ""}>
+                <a href={`#${category.id}`} data-category={category.id}>
+                  {category.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- 特色视频 -->
+      <div class="featured-video">
+        <div class="columns is-vcentered">
+          <div class="column is-7">
+            <div class="video-player-container">
+              <div class="video-placeholder" data-video-id="abc123">
+                <img src="/images/video-thumbnail.jpg" alt={t('videos.featured.title')} />
+                <div class="play-button">
+                  <i class="fas fa-play"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-5">
+            <h2 class="title is-3">{t('videos.featured.title')}</h2>
+            <p class="featured-video-description">{t('videos.featured.description')}</p>
+            <div class="video-meta">
+              <span class="video-date"><i class="far fa-calendar-alt"></i> 2025-06-15</span>
+              <span class="video-duration"><i class="far fa-clock"></i> 15:20</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 视频网格 -->
+      <div class="video-grid">
+        <h3 class="title is-4 section-title">{t('videos.recent')}</h3>
+        <div class="columns is-multiline">
+          {videos.map((video) => (
+            <div class="column is-4">
+              <div class="video-card" data-category={video.category}>
+                <div class="video-thumbnail" data-video-id={video.videoId}>
+                  <img src={video.thumbnail} alt={video.title} />
+                  <div class="video-duration">{video.duration}</div>
+                  <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                  </div>
+                </div>
+                <div class="video-content">
+                  <h4 class="video-title">{video.title}</h4>
+                  <p class="video-description">{video.description}</p>
+                  <div class="video-meta">
+                    <span class="video-date"><i class="far fa-calendar-alt"></i> {video.date}</span>
+                    <span class="video-category">{videoCategories.find(c => c.id === video.category)?.name}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 加载更多按钮 -->
+      <div class="load-more has-text-centered">
+        <button class="button is-primary is-medium">{t('videos.load_more')}</button>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .video-section {
+    padding: 3rem 1.5rem;
+    background-color: var(--color-dark);
+  }
+  
+  .video-categories {
+    margin-bottom: 2.5rem;
+  }
+  
+  .tabs ul {
+    border-bottom-color: var(--color-bg-light);
+  }
+  
+  .tabs li a {
+    color: var(--color-gray);
+    border-bottom-color: transparent;
+    transition: all 0.3s ease;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .tabs li a:hover {
+    color: var(--color-white);
+    border-bottom-color: var(--color-gray);
+  }
+  
+  .tabs li.is-active a {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    border-bottom-width: 3px;
+  }
+  
+  .featured-video {
+    margin-bottom: 4rem;
+    background-color: var(--color-bg-light);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .video-player-container {
+    position: relative;
+  }
+  
+  .video-placeholder {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  
+  .video-placeholder img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  
+  .video-placeholder:hover img {
+    transform: scale(1.05);
+  }
+  
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background-color: rgba(224, 58, 62, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+  
+  .play-button i {
+    color: white;
+    font-size: 2rem;
+    margin-left: 6px;
+  }
+  
+  .video-placeholder:hover .play-button {
+    background-color: var(--color-primary);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  
+  .video-placeholder::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+  }
+  
+  .featured-video-description {
+    color: var(--color-gray);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .video-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: var(--color-gray);
+    font-size: 0.9rem;
+  }
+  
+  .video-date i,
+  .video-duration i {
+    margin-right: 0.5rem;
+  }
+  
+  .section-title {
+    margin-bottom: 2rem;
+    position: relative;
+    padding-left: 1rem;
+    color: var(--color-white);
+  }
+  
+  .section-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.2em;
+    height: 1em;
+    width: 4px;
+    background-color: var(--color-primary);
+    border-radius: 2px;
+  }
+  
+  .video-grid {
+    margin-bottom: 3rem;
+  }
+  
+  .video-card {
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  .video-thumbnail {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .video-thumbnail img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  
+  .video-thumbnail:hover img {
+    transform: scale(1.05);
+  }
+  
+  .video-duration {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    z-index: 2;
+  }
+  
+  .play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .play-overlay i {
+    color: white;
+    font-size: 2rem;
+    background-color: rgba(224, 58, 62, 0.8);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .video-thumbnail:hover .play-overlay {
+    opacity: 1;
+  }
+  
+  .video-content {
+    padding: 1.25rem;
+  }
+  
+  .video-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--color-white);
+    line-height: 1.3;
+  }
+  
+  .video-description {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  
+  .video-meta {
+    font-size: 0.85rem;
+    color: var(--color-gray);
+  }
+  
+  .video-category {
+    background-color: rgba(224, 58, 62, 0.2);
+    color: var(--color-primary);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  
+  .load-more {
+    margin-top: 3rem;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .video-categories {
+      margin-bottom: 1.5rem;
+    }
+    
+    .tabs li a {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .featured-video .columns {
+      flex-direction: column;
+    }
+    
+    .play-button {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .play-button i {
+      font-size: 1.5rem;
+    }
+    
+    .video-card {
+      margin-bottom: 1.5rem;
+    }
+    
+    .column.is-4 {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 加载Font Awesome图标
+    if (!document.querySelector('link[href*="font-awesome"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+      document.head.appendChild(link);
+    }
+    
+    // 视频分类选项卡功能
+    const categoryTabs = document.querySelectorAll('.tabs li a');
+    const videoCards = document.querySelectorAll('.video-card');
+    
+    categoryTabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // 移除所有标签的活动状态
+        categoryTabs.forEach(t => t.parentElement.classList.remove('is-active'));
+        
+        // 为当前标签添加活动状态
+        tab.parentElement.classList.add('is-active');
+        
+        const selectedCategory = tab.dataset.category;
+        
+        if (selectedCategory === 'all') {
+          // 显示所有视频
+          videoCards.forEach(card => {
+            card.style.display = 'block';
+          });
+        } else {
+          // 仅显示所选类别的视频
+          videoCards.forEach(card => {
+            if (card.dataset.category === selectedCategory) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+      });
+    });
+    
+    // 视频播放功能
+    const videoThumbnails = document.querySelectorAll('.video-placeholder, .video-thumbnail');
+    
+    videoThumbnails.forEach(thumbnail => {
+      thumbnail.addEventListener('click', () => {
+        const videoId = thumbnail.dataset.videoId;
+        // 这里可以实现视频播放逻辑，如打开模态框播放视频
+        console.log(`播放视频ID: ${videoId}`);
+        
+        // 示例：创建模态框播放视频
+        const modal = document.createElement('div');
+        modal.className = 'video-modal';
+        modal.innerHTML = `
+          <div class="video-modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="video-container">
+              <!-- 这里替换为实际的视频播放器 -->
+              <div class="video-placeholder">
+                <h2 class="has-text-centered">视频播放器将在这里</h2>
+                <p class="has-text-centered">视频ID: ${videoId}</p>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden'; // 防止背景滚动
+        
+        // 关闭模态框
+        const closeModal = modal.querySelector('.close-modal');
+        closeModal.addEventListener('click', () => {
+          document.body.removeChild(modal);
+          document.body.style.overflow = '';
+        });
+      });
+    });
+    
+    // 加载更多按钮功能
+    const loadMoreBtn = document.querySelector('.load-more button');
+    
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        // 这里可以实现加载更多视频的逻辑
+        console.log('加载更多视频');
+        // 示例：显示加载状态
+        loadMoreBtn.classList.add('is-loading');
+        
+        // 模拟加载延迟
+        setTimeout(() => {
+          loadMoreBtn.classList.remove('is-loading');
+          // 实际项目中，这里应该加载新视频并添加到DOM
+        }, 1500);
+      });
+    }
+  });
+</script> 
