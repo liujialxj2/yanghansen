@@ -8,144 +8,286 @@ export default {
   },
   fields: {
     add: {
-      main: {
-        type: 'area',
-        options: {
-          widgets: {
-            'hero-widget': {},
-            'stats-widget': {},
-            'timeline-widget': {},
-            'rich-text-widget': {},
-            '@apostrophecms/image': {}
-          }
-        }
-      },
-      profileSection: {
-        type: 'area',
+      heroTitle: {
+        type: 'string',
         label: {
-          zh: '个人简介区域',
-          en: 'Profile Section'
+          zh: '英雄区标题',
+          en: 'Hero Title'
         },
-        options: {
-          widgets: {
-            'rich-text-widget': {},
-            '@apostrophecms/image': {},
-            '@apostrophecms/video': {}
-          }
-        }
+        required: true
       },
-      bio: {
+      heroSubtitle: {
+        type: 'string',
+        label: {
+          zh: '英雄区副标题',
+          en: 'Hero Subtitle'
+        },
+        textarea: true
+      },
+      heroImage: {
+        type: 'attachment',
+        label: {
+          zh: '英雄区图片',
+          en: 'Hero Image'
+        },
+        fileGroup: 'images'
+      },
+      biography: {
         type: 'area',
         label: {
-          zh: '生平经历',
+          zh: '个人传记',
           en: 'Biography'
         },
         options: {
           widgets: {
-            'rich-text-widget': {},
-            '@apostrophecms/image': {},
-            'timeline-widget': {}
-          }
-        }
-      },
-      achievements: {
-        type: 'area',
-        label: {
-          zh: '成就与荣誉',
-          en: 'Achievements & Awards'
-        },
-        options: {
-          widgets: {
-            'awards-widget': {},
-            'rich-text-widget': {},
+            '@apostrophecms/rich-text': {
+              toolbar: [
+                'styles',
+                'bold',
+                'italic',
+                'link',
+                'bullet_list',
+                'ordered_list',
+                'blockquote'
+              ],
+              styles: [
+                {
+                  tag: 'p',
+                  label: {
+                    zh: '段落',
+                    en: 'Paragraph'
+                  }
+                },
+                {
+                  tag: 'h2',
+                  label: {
+                    zh: '标题2',
+                    en: 'Heading 2'
+                  }
+                },
+                {
+                  tag: 'h3',
+                  label: {
+                    zh: '标题3',
+                    en: 'Heading 3'
+                  }
+                }
+              ]
+            },
             '@apostrophecms/image': {}
           }
         }
       },
-      personalLife: {
-        type: 'area',
+      careerTimeline: {
+        type: 'array',
         label: {
-          zh: '个人生活',
-          en: 'Personal Life'
+          zh: '职业生涯时间线',
+          en: 'Career Timeline'
         },
-        options: {
-          widgets: {
-            'rich-text-widget': {},
-            '@apostrophecms/image': {},
-            '@apostrophecms/video': {},
-            'gallery-widget': {}
+        titleField: 'title',
+        fields: {
+          add: {
+            year: {
+              type: 'string',
+              label: {
+                zh: '年份',
+                en: 'Year'
+              },
+              required: true
+            },
+            title: {
+              type: 'string',
+              label: {
+                zh: '标题',
+                en: 'Title'
+              },
+              required: true
+            },
+            description: {
+              type: 'string',
+              label: {
+                zh: '描述',
+                en: 'Description'
+              },
+              textarea: true
+            },
+            image: {
+              type: 'attachment',
+              label: {
+                zh: '图片',
+                en: 'Image'
+              },
+              fileGroup: 'images'
+            }
           }
         }
       },
-      relatedLinks: {
-        type: 'array',
+      quote: {
+        type: 'object',
         label: {
-          zh: '相关链接',
-          en: 'Related Links'
+          zh: '引述',
+          en: 'Quote'
         },
-        titleField: 'title',
-        schema: [
-          {
-            name: 'title',
-            type: 'string',
-            label: {
-              zh: '标题',
-              en: 'Title'
-            }
-          },
-          {
-            name: 'url',
-            type: 'url',
-            label: {
-              zh: '链接',
-              en: 'URL'
-            }
-          },
-          {
-            name: 'description',
-            type: 'string',
-            label: {
-              zh: '描述',
-              en: 'Description'
+        fields: {
+          add: {
+            content: {
+              type: 'string',
+              label: {
+                zh: '引述内容',
+                en: 'Quote Content'
+              },
+              textarea: true
             },
-            textarea: true
+            author: {
+              type: 'string',
+              label: {
+                zh: '作者',
+                en: 'Author'
+              }
+            },
+            authorTitle: {
+              type: 'string',
+              label: {
+                zh: '作者职位',
+                en: 'Author Title'
+              }
+            }
           }
-        ]
+        }
       },
-      metaDescription: {
+      personalInterests: {
+        type: 'area',
+        label: {
+          zh: '个人兴趣爱好',
+          en: 'Personal Interests'
+        },
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {}
+          }
+        }
+      },
+      galleryTitle: {
         type: 'string',
         label: {
-          zh: '元描述',
-          en: 'Meta Description'
+          zh: '图库标题',
+          en: 'Gallery Title'
         },
-        textarea: true,
-        help: {
-          zh: '用于搜索引擎优化的页面描述',
-          en: 'Page description for SEO purposes'
+        def: {
+          zh: '照片墙',
+          en: 'Photo Gallery'
+        }
+      },
+      galleryDescription: {
+        type: 'string',
+        label: {
+          zh: '图库描述',
+          en: 'Gallery Description'
+        },
+        textarea: true
+      },
+      gallery: {
+        type: 'array',
+        label: {
+          zh: '照片集',
+          en: 'Photo Gallery'
+        },
+        fields: {
+          add: {
+            image: {
+              type: 'attachment',
+              label: {
+                zh: '图片',
+                en: 'Image'
+              },
+              fileGroup: 'images',
+              required: true
+            },
+            caption: {
+              type: 'string',
+              label: {
+                zh: '图片说明',
+                en: 'Caption'
+              }
+            }
+          }
+        }
+      },
+      main: {
+        type: 'area',
+        label: {
+          zh: '主要内容',
+          en: 'Main Content'
+        },
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {},
+            hero: {},
+            stats: {},
+            rows: {},
+            'grid-layout': {}
+          }
         }
       }
     },
     group: {
-      basics: {
+      hero: {
         label: {
-          zh: '基本内容',
-          en: 'Basic Content'
+          zh: '英雄区',
+          en: 'Hero'
         },
-        fields: ['main', 'profileSection']
+        fields: ['heroTitle', 'heroSubtitle', 'heroImage']
       },
       biography: {
         label: {
-          zh: '传记内容',
-          en: 'Biographical Content'
+          zh: '个人传记',
+          en: 'Biography'
         },
-        fields: ['bio', 'achievements', 'personalLife']
+        fields: ['biography']
       },
-      meta: {
+      timeline: {
         label: {
-          zh: '元数据',
-          en: 'Meta Data'
+          zh: '时间线',
+          en: 'Timeline'
         },
-        fields: ['relatedLinks', 'metaDescription']
+        fields: ['careerTimeline']
+      },
+      quotes: {
+        label: {
+          zh: '引述',
+          en: 'Quotes'
+        },
+        fields: ['quote']
+      },
+      interests: {
+        label: {
+          zh: '兴趣爱好',
+          en: 'Interests'
+        },
+        fields: ['personalInterests']
+      },
+      gallery: {
+        label: {
+          zh: '照片墙',
+          en: 'Gallery'
+        },
+        fields: ['galleryTitle', 'galleryDescription', 'gallery']
+      },
+      content: {
+        label: {
+          zh: '主要内容区',
+          en: 'Main Content'
+        },
+        fields: ['main']
+      },
+      basics: {
+        label: {
+          zh: '基础',
+          en: 'Basics'
+        },
+        fields: ['title', 'main']
       }
     }
   }

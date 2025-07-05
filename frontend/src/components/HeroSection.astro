@@ -1,0 +1,188 @@
+import { t } from "i18next";
+
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  backgroundImage?: string;
+  overlayOpacity?: number;
+  buttonText?: string;
+  buttonUrl?: string;
+  height?: "medium" | "large" | "fullheight";
+  alignment?: "left" | "center" | "right";
+}
+
+const {
+  title = t("hero.title"),
+  subtitle = t("hero.subtitle"),
+  backgroundImage = "/images/hero-bg.jpg",
+  overlayOpacity = 0.5,
+  buttonText = t("hero.button"),
+  buttonUrl = "/about",
+  height = "fullheight",
+  alignment = "left"
+} = Astro.props;
+
+// 对齐样式
+const alignmentClasses = {
+  left: "has-text-left",
+  center: "has-text-centered",
+  right: "has-text-right"
+};
+
+const textAlignment = alignmentClasses[alignment] || "has-text-left";
+
+<section 
+  class={`hero is-${height}`} 
+  style={`background-image: url(${backgroundImage});`}
+  aria-label={title}
+>
+  <div class="hero-overlay" style={`opacity: ${overlayOpacity};`}></div>
+  <div class="hero-body">
+    <div class="container">
+      <div class={`hero-content ${textAlignment}`}>
+        <h1 class="title is-1">{title}</h1>
+        <h2 class="subtitle is-3">{subtitle}</h2>
+        {buttonText && buttonUrl && (
+          <div class="hero-buttons">
+            <a href={buttonUrl} class="button is-primary is-large">
+              {buttonText}
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+  
+  <div class="social-links">
+    <a href="https://weibo.com/" target="_blank" rel="noopener noreferrer" aria-label="Weibo">
+      <span class="icon"><i class="fab fa-weibo"></i></span>
+    </a>
+    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      <span class="icon"><i class="fab fa-instagram"></i></span>
+    </a>
+    <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+      <span class="icon"><i class="fab fa-twitter"></i></span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    color: white;
+    overflow: hidden;
+  }
+  
+  .hero.is-medium {
+    min-height: 60vh;
+  }
+  
+  .hero.is-large {
+    min-height: 80vh;
+  }
+  
+  .hero.is-fullheight {
+    min-height: 100vh;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    z-index: 1;
+  }
+  
+  .hero-body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    padding: 3rem 1.5rem;
+  }
+  
+  .hero-content {
+    max-width: 800px;
+    margin-bottom: 3rem;
+  }
+  
+  .title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.3);
+    color: white;
+  }
+  
+  .subtitle {
+    font-weight: 500;
+    font-size: clamp(1.25rem, 4vw, 2rem);
+    margin-bottom: 2rem;
+    max-width: 90%;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .hero-buttons {
+    margin-top: 2rem;
+  }
+  
+  .button.is-primary.is-large {
+    font-size: 1.25rem;
+    padding: 0.75em 1.5em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .button.is-primary.is-large:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(0,0,0,0.25);
+  }
+  
+  .social-links {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .social-links a {
+    color: white;
+    font-size: 1.5rem;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+  }
+  
+  .social-links a:hover {
+    color: var(--color-primary);
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  
+  @media screen and (max-width: 768px) {
+    .hero-body {
+      padding-top: 6rem;
+      padding-bottom: 4rem;
+    }
+    
+    .social-links {
+      bottom: 1.5rem;
+      left: 1.5rem;
+    }
+    
+    .hero-content.has-text-right,
+    .hero-content.has-text-left {
+      text-align: center;
+    }
+  }
+</style> 

@@ -1,77 +1,141 @@
 export default {
   extend: '@apostrophecms/piece-type',
   options: {
-    label: 'Author',
-    pluralLabel: 'Authors'
+    label: {
+      zh: '作者',
+      en: 'Author'
+    },
+    pluralLabel: {
+      zh: '作者',
+      en: 'Authors'
+    }
+  },
+  commands: {
+    add: {
+      label: 'Add Author'
+    },
+    edit: {
+      label: 'Edit Author'
+    },
+    manage: {
+      label: 'Manage Authors'
+    }
   },
   fields: {
     add: {
+      name: {
+        type: 'string',
+        label: {
+          zh: '姓名',
+          en: 'Name'
+        },
+        required: true
+      },
       title: {
         type: 'string',
-        label: 'Name'
-      },
-      profileImage: {
-        type: 'area',
-        options: {
-          max: 1,
-          widgets: {
-            '@apostrophecms/image': {}
-          }
+        label: {
+          zh: '职位',
+          en: 'Title'
         }
       },
-      biography: {
-        type: 'area',
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {}
-          }
-        }
+      bio: {
+        type: 'string',
+        label: {
+          zh: '简介',
+          en: 'Biography'
+        },
+        textarea: true
+      },
+      _image: {
+        type: 'relationship',
+        label: {
+          zh: '头像',
+          en: 'Profile Image'
+        },
+        withType: '@apostrophecms/image',
+        max: 1
       },
       email: {
-        type: 'email',
-        label: 'Email Address'
+        type: 'string',
+        label: {
+          zh: '电子邮件',
+          en: 'Email'
+        }
       },
-      socialLinks: {
+      socialMedia: {
         type: 'array',
-        label: 'Social Media Links',
-        titleField: 'platform',
-        inline: true,
+        label: {
+          zh: '社交媒体',
+          en: 'Social Media'
+        },
         fields: {
           add: {
             platform: {
               type: 'select',
+              label: {
+                zh: '平台',
+                en: 'Platform'
+              },
               choices: [
-                { label: 'Twitter/X', value: 'twitter' },
-                { label: 'LinkedIn', value: 'linkedin' },
-                { label: 'GitHub', value: 'github' },
-                { label: 'Personal Website', value: 'website' }
+                {
+                  label: 'Twitter',
+                  value: 'twitter'
+                },
+                {
+                  label: 'Instagram',
+                  value: 'instagram'
+                },
+                {
+                  label: 'LinkedIn',
+                  value: 'linkedin'
+                },
+                {
+                  label: 'Weibo',
+                  value: 'weibo'
+                }
               ]
             },
             url: {
               type: 'url',
-              label: 'Profile URL'
+              label: {
+                zh: '链接',
+                en: 'URL'
+              }
             }
           }
         }
       },
       _articles: {
         type: 'relationshipReverse',
+        label: {
+          zh: '文章',
+          en: 'Articles'
+        },
         withType: 'article',
         reverseOf: '_author'
       }
     },
     group: {
       basics: {
-        label: 'Basic Info',
-        fields: ['title', 'email', 'profileImage', '_articles']
+        label: {
+          zh: '基本信息',
+          en: 'Basic Info'
+        },
+        fields: ['name', 'title', '_image']
       },
       content: {
-        label: 'Content',
-        fields: ['biography']
+        label: {
+          zh: '内容',
+          en: 'Content'
+        },
+        fields: ['bio', 'email', 'socialMedia']
       },
-      social: {
-        label: 'Social Media',
-        fields: ['socialLinks']
+      relationships: {
+        label: {
+          zh: '关联',
+          en: 'Relationships'
+        },
+        fields: ['_articles']
       }
     }
   }

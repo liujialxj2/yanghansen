@@ -1,33 +1,83 @@
 ---
-import { getLangInfo, getAlternateLangUrl } from '../lib/multilingual';
+import { localizePath } from "../lib/multilingual.js";
+import { getLocale } from "../lib/multilingual.js";
 
-const { url } = Astro;
-const { lang } = getLangInfo(url);
-const alternateUrl = getAlternateLangUrl(url);
+const currentLocale = getLocale(Astro.url.pathname);
+const pathname = Astro.url.pathname;
+
+// 确定当前路径的其他语言版本
+function getLocalizedPath(locale) {
+  return localizePath(pathname, locale);
+}
+
+// 显示语言名称
+const languageNames = {
+  zh: "中文",
+  en: "English"
+};
 ---
 
-<div class="language-switch">
-  <a href={alternateUrl} class="button is-small">
-    {lang === 'zh' ? 'English' : '中文'}
-  </a>
+<div class="language-switcher">
+  <div class="dropdown is-hoverable is-right">
+    <div class="dropdown-trigger">
+      <button
+        class="button is-small is-outlined"
+        aria-haspopup="true"
+        aria-controls="language-dropdown"
+      >
+        <span>{languageNames[currentLocale]}</span>
+        <span class="icon is-small">
+          <i class="fas fa-angle-down" aria-hidden="true"></i>
+        </span>
+      </button>
+    </div>
+    <div class="dropdown-menu" id="language-dropdown" role="menu">
+      <div class="dropdown-content">
+        {
+          Object.keys(languageNames).map((locale) => (
+            <a
+              href={getLocalizedPath(locale)}
+              class={`dropdown-item ${locale === currentLocale ? "is-active" : ""}`}
+            >
+              {languageNames[locale]}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
-.language-switch {
-  margin-left: 1rem;
-}
-
-.language-switch .button {
-  font-weight: 500;
-  border-radius: 4px;
-  background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-.language-switch .button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: white;
-}
+  .language-switcher .button {
+    background-color: transparent;
+    border-color: var(--color-gray);
+    color: var(--color-white);
+  }
+  
+  .language-switcher .button:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  
+  .language-switcher .dropdown-content {
+    background-color: var(--color-bg-light);
+    border-radius: 4px;
+    border: 1px solid var(--color-gray);
+  }
+  
+  .language-switcher .dropdown-item {
+    color: var(--color-white);
+    padding: 0.375rem 1rem;
+  }
+  
+  .language-switcher .dropdown-item:hover {
+    background-color: rgba(224, 58, 62, 0.2);
+    color: var(--color-primary);
+  }
+  
+  .language-switcher .dropdown-item.is-active {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
 </style> 

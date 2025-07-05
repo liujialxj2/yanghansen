@@ -3,6 +3,7 @@ import apostrophe from 'apostrophe';
 export default apostrophe({
   root: import.meta,
   shortName: 'apollo',
+  baseUrl: 'http://localhost:3000',
   modules: {
     // Apostrophe module configuration
     // *******************************
@@ -23,26 +24,68 @@ export default apostrophe({
     '@apostrophecms/asset': {},
 
     // Custom extensions
-    // Make sure to set the `APOS_BASE_URL` environment variable to the base
-    // URL of your Apostrophe site
-    '@apostrophecms/seo': {},
-
-    // pieces
-    article: {},
-    author: {},
-    'career-stats-piece': {},
-
-    // pages
+    // Main content modules
     'default-page': {},
-    'article-page': {},
-
-    // widgets
-    'grid-layout-widget': {},
-    'accordion-widget': {},
-    'card-widget': {},
+    'about-page': {},
+    'personal-info-piece': {},
+    'career-stats-piece': {},
+    'author': {},
+    
+    // Widget modules
     'hero-widget': {},
-    'link-widget': {},
-    'slideshow-widget': {},
-    'rows-widget': {}
+    'stats-widget': {},
+    'link': {},
+    
+    // External front-end integration
+    '@apostrophecms/external-front': {
+      options: {
+        apiKeys: ['hansen-website-key']
+      }
+    },
+    '@apostrophecms/user-external-auth': {},
+
+    // This module enables the /api/v1/products endpoint
+    'article': {},
+    
+    '@apostrophecms/page': {
+      options: {
+        park: [
+          {
+            title: 'About',
+            slug: '/about',
+            type: 'about-page',
+            parkedId: 'aboutPage',
+            _children: [
+              {
+                title: 'Career',
+                slug: '/about/career',
+                type: 'default-page',
+                parkedId: 'careerPage'
+              },
+              {
+                title: 'Media',
+                slug: '/about/media',
+                type: 'default-page',
+                parkedId: 'mediaPage'
+              }
+            ]
+          }
+        ],
+        types: [
+          {
+            name: '@apostrophecms/home-page',
+            label: 'Home'
+          },
+          {
+            name: 'default-page',
+            label: 'Default Page'
+          },
+          {
+            name: 'about-page',
+            label: 'About Page'
+          }
+        ]
+      }
+    }
   }
 });

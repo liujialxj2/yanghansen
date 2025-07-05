@@ -3,14 +3,27 @@ export default {
   options: {
     label: {
       zh: '个人信息',
-      en: 'Personal Information'
+      en: 'Personal Info'
     },
     pluralLabel: {
       zh: '个人信息',
-      en: 'Personal Information'
+      en: 'Personal Info'
     },
-    // 最多只允许一条记录
+    quickCreate: false,
+    sort: { createdAt: -1 },
+    // 只允许一个个人信息实例
     singleton: true
+  },
+  commands: {
+    add: {
+      label: 'Add Personal Info'
+    },
+    edit: {
+      label: 'Edit Personal Info'
+    },
+    manage: {
+      label: 'Manage Personal Info'
+    }
   },
   fields: {
     add: {
@@ -20,24 +33,14 @@ export default {
           zh: '全名',
           en: 'Full Name'
         },
-        required: true,
-        def: '杨瀚森 (Hansen Yang)'
-      },
-      chineseName: {
-        type: 'string',
-        label: {
-          zh: '中文名',
-          en: 'Chinese Name'
-        },
-        def: '杨瀚森'
+        required: true
       },
       englishName: {
         type: 'string',
         label: {
           zh: '英文名',
           en: 'English Name'
-        },
-        def: 'Hansen Yang'
+        }
       },
       birthDate: {
         type: 'date',
@@ -45,7 +48,7 @@ export default {
           zh: '出生日期',
           en: 'Birth Date'
         },
-        def: '2005-06-26'
+        required: true
       },
       birthPlace: {
         type: 'string',
@@ -53,7 +56,7 @@ export default {
           zh: '出生地',
           en: 'Birth Place'
         },
-        def: '中国山东省淄博市'
+        required: true
       },
       height: {
         type: 'float',
@@ -61,15 +64,14 @@ export default {
           zh: '身高 (米)',
           en: 'Height (m)'
         },
-        def: 2.16
+        required: true
       },
       heightFeet: {
         type: 'string',
         label: {
           zh: '身高 (英尺)',
-          en: 'Height (ft)'
-        },
-        def: "7'1\""
+          en: 'Height (ft-in)'
+        }
       },
       weight: {
         type: 'float',
@@ -77,20 +79,19 @@ export default {
           zh: '体重 (公斤)',
           en: 'Weight (kg)'
         },
-        def: 113
+        required: true
       },
-      weightLbs: {
+      weightPounds: {
         type: 'float',
         label: {
           zh: '体重 (磅)',
           en: 'Weight (lbs)'
-        },
-        def: 249
+        }
       },
       position: {
         type: 'select',
         label: {
-          zh: '位置',
+          zh: '场上位置',
           en: 'Position'
         },
         choices: [
@@ -106,31 +107,31 @@ export default {
               zh: '大前锋',
               en: 'Power Forward'
             },
-            value: 'power-forward'
+            value: 'pf'
           },
           {
             label: {
               zh: '小前锋',
               en: 'Small Forward'
             },
-            value: 'small-forward'
+            value: 'sf'
           },
           {
             label: {
               zh: '得分后卫',
               en: 'Shooting Guard'
             },
-            value: 'shooting-guard'
+            value: 'sg'
           },
           {
             label: {
               zh: '控球后卫',
               en: 'Point Guard'
             },
-            value: 'point-guard'
+            value: 'pg'
           }
         ],
-        def: 'center'
+        required: true
       },
       jerseyNumber: {
         type: 'integer',
@@ -138,110 +139,82 @@ export default {
           zh: '球衣号码',
           en: 'Jersey Number'
         },
-        def: 16
+        required: true
       },
       team: {
         type: 'string',
         label: {
-          zh: '现役球队',
-          en: 'Current Team'
+          zh: '所属球队',
+          en: 'Team'
         },
-        def: '波特兰开拓者队 (Portland Trail Blazers)'
+        required: true
       },
       wingspan: {
         type: 'float',
         label: {
           zh: '臂展 (米)',
           en: 'Wingspan (m)'
-        },
-        def: 2.20
+        }
       },
       wingspanFeet: {
         type: 'string',
         label: {
           zh: '臂展 (英尺)',
-          en: 'Wingspan (ft)'
-        },
-        def: "7'2.75\""
+          en: 'Wingspan (ft-in)'
+        }
       },
-      profilePhoto: {
+      bio: {
         type: 'area',
+        label: {
+          zh: '个人简介',
+          en: 'Biography'
+        },
+        options: {
+          max: 1,
+          widgets: {
+            '@apostrophecms/rich-text': {}
+          }
+        }
+      },
+      profileImage: {
+        type: 'attachment',
         label: {
           zh: '个人照片',
-          en: 'Profile Photo'
+          en: 'Profile Image'
         },
-        options: {
-          widgets: {
-            '@apostrophecms/image': {}
-          },
-          max: 1
-        }
+        fileGroup: 'images'
       },
-      actionPhotos: {
-        type: 'area',
+      heroImage: {
+        type: 'attachment',
         label: {
-          zh: '比赛照片',
-          en: 'Action Photos'
+          zh: '英雄形象照',
+          en: 'Hero Image'
         },
-        options: {
-          widgets: {
-            '@apostrophecms/image': {}
-          },
-          max: 10
-        }
+        fileGroup: 'images'
       },
-      shortBio: {
-        type: 'string',
+      actionImages: {
+        type: 'array',
         label: {
-          zh: '简介',
-          en: 'Short Bio'
+          zh: '动作照片集',
+          en: 'Action Images'
         },
-        textarea: true
-      },
-      fullBio: {
-        type: 'area',
-        label: {
-          zh: '详细介绍',
-          en: 'Full Bio'
-        },
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {
-              toolbar: [
-                'styles',
-                'bold',
-                'italic',
-                'strike',
-                'link',
-                'bullet_list',
-                'ordered_list',
-                'blockquote'
-              ],
-              styles: [
-                {
-                  tag: 'p',
-                  label: {
-                    zh: '段落',
-                    en: 'Paragraph'
-                  }
-                },
-                {
-                  tag: 'h3',
-                  label: {
-                    zh: '小标题',
-                    en: 'Heading 3'
-                  }
-                },
-                {
-                  tag: 'h4',
-                  label: {
-                    zh: '小标题',
-                    en: 'Heading 4'
-                  }
-                }
-              ]
+        fields: {
+          add: {
+            image: {
+              type: 'attachment',
+              label: {
+                zh: '照片',
+                en: 'Image'
+              },
+              fileGroup: 'images'
             },
-            '@apostrophecms/image': {}
+            caption: {
+              type: 'string',
+              label: {
+                zh: '说明',
+                en: 'Caption'
+              }
+            }
           }
         }
       },
@@ -250,27 +223,79 @@ export default {
         label: {
           zh: '家乡',
           en: 'Hometown'
-        },
-        def: '中国山东省淄博市'
+        }
       },
-      familyBackground: {
-        type: 'area',
+      nationality: {
+        type: 'string',
         label: {
-          zh: '家庭背景',
-          en: 'Family Background'
+          zh: '国籍',
+          en: 'Nationality'
+        }
+      },
+      education: {
+        type: 'string',
+        label: {
+          zh: '教育背景',
+          en: 'Education'
+        }
+      },
+      socialMedia: {
+        type: 'array',
+        label: {
+          zh: '社交媒体',
+          en: 'Social Media'
         },
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {
-              toolbar: [
-                'styles',
-                'bold',
-                'italic',
-                'strike',
-                'link',
-                'bullet_list',
-                'ordered_list'
-              ]
+        titleField: 'platform',
+        fields: {
+          add: {
+            platform: {
+              type: 'select',
+              label: {
+                zh: '平台',
+                en: 'Platform'
+              },
+              choices: [
+                {
+                  label: 'Weibo',
+                  value: 'weibo'
+                },
+                {
+                  label: 'Instagram',
+                  value: 'instagram'
+                },
+                {
+                  label: 'Twitter',
+                  value: 'twitter'
+                },
+                {
+                  label: 'YouTube',
+                  value: 'youtube'
+                },
+                {
+                  label: 'TikTok / Douyin',
+                  value: 'tiktok'
+                },
+                {
+                  label: 'Facebook',
+                  value: 'facebook'
+                }
+              ],
+              required: true
+            },
+            url: {
+              type: 'url',
+              label: {
+                zh: '链接',
+                en: 'URL'
+              },
+              required: true
+            },
+            username: {
+              type: 'string',
+              label: {
+                zh: '用户名',
+                en: 'Username'
+              }
             }
           }
         }
@@ -282,60 +307,42 @@ export default {
           zh: '基本信息',
           en: 'Basic Information'
         },
-        fields: [
-          'fullName',
-          'chineseName',
-          'englishName',
-          'birthDate',
-          'birthPlace',
-          'hometown'
-        ]
+        fields: ['fullName', 'englishName', 'birthDate', 'birthPlace', 'position', 'jerseyNumber', 'team']
       },
       physical: {
         label: {
           zh: '身体数据',
-          en: 'Physical Data'
+          en: 'Physical Attributes'
         },
-        fields: [
-          'height',
-          'heightFeet',
-          'weight',
-          'weightLbs',
-          'wingspan',
-          'wingspanFeet'
-        ]
+        fields: ['height', 'heightFeet', 'weight', 'weightPounds', 'wingspan', 'wingspanFeet']
       },
-      basketball: {
+      background: {
         label: {
-          zh: '篮球信息',
-          en: 'Basketball Info'
+          zh: '背景信息',
+          en: 'Background'
         },
-        fields: [
-          'position',
-          'jerseyNumber',
-          'team'
-        ]
+        fields: ['hometown', 'nationality', 'education']
       },
       media: {
         label: {
           zh: '媒体资源',
           en: 'Media'
         },
-        fields: [
-          'profilePhoto',
-          'actionPhotos'
-        ]
+        fields: ['profileImage', 'heroImage', 'actionImages']
       },
-      bio: {
+      content: {
         label: {
-          zh: '个人简介',
-          en: 'Biography'
+          zh: '内容',
+          en: 'Content'
         },
-        fields: [
-          'shortBio',
-          'fullBio',
-          'familyBackground'
-        ]
+        fields: ['bio']
+      },
+      social: {
+        label: {
+          zh: '社交媒体',
+          en: 'Social Media'
+        },
+        fields: ['socialMedia']
       }
     }
   }

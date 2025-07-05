@@ -1,51 +1,96 @@
 /**
- * 多语言支持工具库
- * 为杨瀚森官网提供中英文双语支持
+ * 多语言工具库
+ * Multilingual utilities for Hansen Yang website
  */
 
 /**
- * 从URL中获取当前语言信息
- * @param {URL} url 当前页面URL
- * @returns {Object} 语言信息对象，包含语言代码和是否为默认语言
+ * 从URL路径中获取当前语言
+ * Get current locale from URL path
+ * @param {string} pathname - URL路径
+ * @returns {string} 当前语言代码 'zh' 或 'en'
  */
-export function getLangInfo(url) {
-  // 通过URL路径分析当前语言
-  const pathname = url.pathname;
-  const segments = pathname.split('/').filter(Boolean);
-  
-  // 如果路径以/en开头，则当前语言为英文
-  if (segments.length > 0 && segments[0] === 'en') {
-    return {
-      lang: 'en',
-      isDefault: false
-    };
+export function getLocale(pathname) {
+  // 如果路径以 '/en' 开头，则返回英语
+  if (pathname.startsWith('/en')) {
+    return 'en';
   }
-  
-  // 默认语言为中文
-  return {
-    lang: 'zh',
-    isDefault: true
-  };
+  // 默认为中文
+  return 'zh';
 }
 
 /**
- * 获取当前语言对应的翻译内容
- * @param {Object} content 包含多语言内容的对象
- * @param {string} lang 当前语言代码
- * @returns {string|Object} 当前语言的内容
+ * 根据当前语言获取本地化内容
+ * Get localized content based on current language
+ * @param {Object} content - 包含语言键的内容对象
+ * @param {string} locale - 当前语言代码
+ * @returns {string} 本地化内容
  */
-export function getLocalizedContent(content, lang) {
-  if (!content) {
-    return '';
-  }
+export function getLocalizedContent(content, locale = 'zh') {
+  if (!content) return '';
   
-  // 如果内容是字符串或没有语言特定版本，直接返回
-  if (typeof content === 'string' || !content[lang]) {
+  // 如果内容是字符串，直接返回
+  if (typeof content === 'string') {
     return content;
   }
   
-  // 返回当前语言对应的内容，或默认语言内容
-  return content[lang] || content['zh'] || '';
+  // 如果内容是对象，检查是否包含语言键
+  if (typeof content === 'object' && content !== null) {
+    if (content[locale]) {
+      return content[locale];
+    }
+    
+    // 如果找不到当前语言的内容，返回默认语言或第一个可用键
+    if (content.zh) return content.zh;
+    if (content.en) return content.en;
+    
+    // 如果都没有，返回第一个可用值
+    const firstKey = Object.keys(content)[0];
+    if (firstKey) return content[firstKey];
+  }
+  
+  return '';
+}
+
+/**
+ * 格式化日期为本地化格式
+ * Format date to localized format
+ * @param {string|Date} date - 日期字符串或Date对象
+ * @param {string} locale - 当前语言代码
+ * @returns {string} 格式化后的日期字符串
+ */
+export function formatLocalizedDate(date, locale = 'zh') {
+  if (!date) return '';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  
+  if (locale === 'zh') {
+    return dateObj.toLocaleDateString('zh-CN', options);
+  } else {
+    return dateObj.toLocaleDateString('en-US', options);
+  }
+}
+
+/**
+ * 本地化数字格式
+ * Format number to localized format
+ * @param {number} num - 数字
+ * @param {string} locale - 当前语言代码
+ * @returns {string} 格式化后的数字字符串
+ */
+export function formatLocalizedNumber(num, locale = 'zh') {
+  if (num === undefined || num === null) return '';
+  
+  if (locale === 'zh') {
+    return num.toLocaleString('zh-CN');
+  } else {
+    return num.toLocaleString('en-US');
+  }
 }
 
 /**
@@ -111,4 +156,37 @@ export function getDateFormatOptions(lang) {
  */
 export function getLanguageSwitchLabel(lang) {
   return lang === 'zh' ? 'English' : '中文';
+}
+
+/**
+ * 获取当前URL的语言信息
+ * @param {URL} url 当前URL
+ * @returns {Object} 语言信息
+ */
+export function getLangInfo(url) {
+  const pathname = url.pathname;
+  const isEnglish = pathname.startsWith('/en');
+  return {
+    lang: isEnglish ? 'en' : 'zh',
+    isDefault: !isEnglish
+  };
+}
+
+/**
+ * 本地化路径
+ * @param {string} path 路径
+ * @param {string} lang 语言代码
+ * @returns {string} 本地化后的路径
+ */
+export function localizePath(path, lang) {
+  if (lang === 'en') {
+    // 如果路径已经以/en开头，则不需要添加
+    if (path.startsWith('/en')) {
+      return path;
+    }
+    // 否则添加/en前缀
+    return `/en${path}`;
+  }
+  // 中文是默认语言，移除/en前缀
+  return path.replace(/^\/en/, '');
 } 

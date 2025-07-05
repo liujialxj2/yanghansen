@@ -1,38 +1,402 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getLangInfo } from '../lib/multilingual';
+import { t } from "i18next";
+import MainLayout from "../layouts/MainLayout.astro";
+import HeroSection from "../components/HeroSection.astro";
+import StatsCard from "../components/StatsCard.astro";
 
-const { lang } = getLangInfo(Astro.url);
-const title = lang === 'zh' ? '首页' : 'Home';
+// 从后端CMS获取数据
+// 在实际项目中，这里应该从ApostropheCMS获取数据
+const latestNews = [
+  {
+    id: "1",
+    title: {
+      zh: "杨瀚森正式加入NBA波特兰开拓者队",
+      en: "Hansen Yang Officially Joins Portland Trail Blazers"
+    },
+    excerpt: {
+      zh: "2025年6月26日，杨瀚森在选秀大会上被波特兰开拓者队以首轮第16顺位选中，成为第九位进入NBA的中国球员...",
+      en: "On June 26, 2025, Hansen Yang was selected by the Portland Trail Blazers with the 16th overall pick in the NBA draft..."
+    },
+    date: "2025-06-26",
+    image: "/images/news/draft-day.jpg"
+  },
+  {
+    id: "2",
+    title: {
+      zh: "杨瀚森参加NBA选秀前训练营展现潜力",
+      en: "Hansen Yang Shows Promise in NBA Draft Combine"
+    },
+    excerpt: {
+      zh: "在芝加哥举行的NBA选秀训练营上，杨瀚森展现出了出色的传球视野和低位进攻技巧，引起了多支球队的关注...",
+      en: "At the NBA Draft Combine in Chicago, Hansen Yang showcased impressive passing vision and post moves, drawing attention from multiple teams..."
+    },
+    date: "2025-05-18",
+    image: "/images/news/draft-combine.jpg"
+  },
+  {
+    id: "3",
+    title: {
+      zh: "杨瀚森宣布参加2025年NBA选秀",
+      en: "Hansen Yang Declares for 2025 NBA Draft"
+    },
+    excerpt: {
+      zh: "中国篮球新星杨瀚森今日正式宣布参加2025年NBA选秀，结束了他在CBA的两个赛季职业生涯...",
+      en: "Chinese basketball sensation Hansen Yang officially declared for the 2025 NBA Draft today, concluding his two-season professional career in the CBA..."
+    },
+    date: "2025-04-26",
+    image: "/images/news/declaration.jpg"
+  }
+];
+
+// 关键统计数据
+const keyStats = [
+  {
+    value: 16.6,
+    label: t("stats.points"),
+    unit: t("stats.ppg"),
+    icon: "basketball"
+  },
+  {
+    value: 10.5,
+    label: t("stats.rebounds"),
+    unit: t("stats.rpg"),
+    icon: "hands"
+  },
+  {
+    value: 3.0,
+    label: t("stats.assists"),
+    unit: t("stats.apg"),
+    icon: "hand-point-up"
+  },
+  {
+    value: 2.6,
+    label: t("stats.blocks"),
+    unit: t("stats.bpg"),
+    icon: "hand-paper"
+  }
+];
 ---
 
-<BaseLayout title={title}>
-  <div class="hero is-fullheight-with-navbar has-hansenyoung-gradient">
-    <div class="hero-body">
-      <div class="container has-text-centered">
-        <h1 class="title is-1">{lang === 'zh' ? '杨瀚森官方网站' : 'Hansen Yang Official Website'}</h1>
-        <h2 class="subtitle is-3">{lang === 'zh' ? '中国篮球新星，波特兰开拓者队球员' : 'Chinese Basketball Star, Portland Trail Blazers Player'}</h2>
-        <div class="mt-5">
-          <a href={lang === 'zh' ? '/about' : '/en/about'} class="button is-light is-large">
-            {lang === 'zh' ? '了解更多' : 'Learn More'}
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+<MainLayout>
+  <!-- Hero Section -->
+  <HeroSection
+    title="HANSEN YANG | 杨瀚森"
+    subtitle={t("hero.subtitle")}
+    buttonText={t("hero.button")}
+    buttonUrl="/about"
+    alignment="left"
+  />
   
+  <!-- Latest News Section -->
   <section class="section">
     <div class="container">
-      <h2 class="title is-2 has-text-centered mb-6">
-        {lang === 'zh' ? '欢迎来到杨瀚森官方网站' : 'Welcome to Hansen Yang Official Website'}
-      </h2>
-      <div class="content has-text-centered">
-        <p class="is-size-5">
-          {lang === 'zh' 
-            ? '网站正在建设中，敬请期待更多内容。' 
-            : 'The website is under construction. Stay tuned for more content.'}
-        </p>
+      <div class="section-header">
+        <h2 class="section-title">{t("home.latest_news")}</h2>
+        <a href="/news" class="view-all">{t("home.view_all")} <i class="fas fa-arrow-right"></i></a>
+      </div>
+      
+      <div class="columns is-multiline">
+        {latestNews.map((news) => (
+          <div class="column is-4-tablet">
+            <div class="news-card">
+              <a href={`/news/${news.id}`} class="news-image-link">
+                <div class="news-image" style={`background-image: url(${news.image});`}></div>
+              </a>
+              <div class="news-content">
+                <h3 class="news-title">
+                  <a href={`/news/${news.id}`}>{news.title[t("locale")]}</a>
+                </h3>
+                <div class="news-date">
+                  <i class="far fa-calendar-alt"></i> {new Date(news.date).toLocaleDateString(t("locale") === "zh" ? "zh-CN" : "en-US")}
+                </div>
+                <p class="news-excerpt">{news.excerpt[t("locale")]}</p>
+                <a href={`/news/${news.id}`} class="read-more">{t("home.read_more")} <i class="fas fa-chevron-right"></i></a>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
-</BaseLayout> 
+  
+  <!-- Stats Section -->
+  <section class="section stats-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">{t("home.career_stats")}</h2>
+        <p class="section-subtitle">{t("home.stats_subtitle")}</p>
+      </div>
+      
+      <div class="columns is-multiline">
+        {keyStats.map((stat) => (
+          <div class="column is-3-tablet is-6-mobile">
+            <StatsCard
+              statValue={stat.value}
+              statLabel={stat.label}
+              statUnit={stat.unit}
+              statIcon={stat.icon}
+              locale={t("locale")}
+            />
+          </div>
+        ))}
+      </div>
+      
+      <div class="has-text-centered mt-6">
+        <a href="/career" class="button is-primary is-outlined is-medium">
+          {t("home.career_details")}
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Video Feature -->
+  <section class="section video-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">{t("home.featured_video")}</h2>
+      </div>
+      
+      <div class="video-container">
+        <div class="video-placeholder">
+          <img src="/images/video-thumbnail.jpg" alt="Hansen Yang Highlights" />
+          <div class="play-button">
+            <i class="fas fa-play"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="has-text-centered mt-5">
+        <a href="/videos" class="button is-primary">
+          {t("home.more_videos")}
+        </a>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .section {
+    padding: 5rem 1.5rem;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+  
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-white);
+    position: relative;
+    padding-bottom: 1rem;
+  }
+  
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: var(--color-primary);
+  }
+  
+  .section-subtitle {
+    color: var(--color-gray);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin-top: 1rem;
+  }
+  
+  .view-all {
+    color: var(--color-primary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .view-all:hover {
+    color: var(--color-white);
+  }
+  
+  .view-all i {
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .view-all:hover i {
+    transform: translateX(5px);
+  }
+  
+  /* News Cards */
+  .news-card {
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+  
+  .news-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    transition: all 0.5s ease;
+  }
+  
+  .news-card:hover .news-image {
+    transform: scale(1.05);
+  }
+  
+  .news-image-link {
+    display: block;
+    overflow: hidden;
+  }
+  
+  .news-content {
+    padding: 1.5rem;
+  }
+  
+  .news-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  .news-title a {
+    color: var(--color-white);
+    transition: color 0.3s ease;
+  }
+  
+  .news-title a:hover {
+    color: var(--color-primary);
+  }
+  
+  .news-date {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
+  .news-date i {
+    margin-right: 0.5rem;
+  }
+  
+  .news-excerpt {
+    color: var(--color-gray);
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+  }
+  
+  .read-more {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .read-more i {
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .read-more:hover i {
+    transform: translateX(3px);
+  }
+  
+  /* Stats Section */
+  .stats-section {
+    background-color: #0A0A0A;
+  }
+  
+  /* Video Section */
+  .video-section {
+    background-color: var(--color-dark);
+  }
+  
+  .video-container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .video-placeholder {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .video-placeholder img {
+    width: 100%;
+    display: block;
+    transition: all 0.5s ease;
+  }
+  
+  .video-placeholder:hover img {
+    transform: scale(1.02);
+  }
+  
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background-color: rgba(224, 58, 62, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .play-button i {
+    color: white;
+    font-size: 2rem;
+    margin-left: 6px;
+  }
+  
+  .video-placeholder:hover .play-button {
+    background-color: var(--color-primary);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  
+  @media screen and (max-width: 768px) {
+    .section {
+      padding: 4rem 1rem;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .section-header {
+      margin-bottom: 2rem;
+    }
+    
+    .play-button {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .play-button i {
+      font-size: 1.5rem;
+    }
+  }
+</style> 
