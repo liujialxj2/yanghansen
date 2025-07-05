@@ -13,13 +13,16 @@ export default {
   },
   commands: {
     add: {
-      label: 'Add Career Stats'
+      label: 'Add Career Stats',
+      type: 'item'
     },
     edit: {
-      label: 'Edit Career Stats'
+      label: 'Edit Career Stats',
+      type: 'item'
     },
     manage: {
-      label: 'Manage Career Stats'
+      label: 'Manage Career Stats',
+      type: 'item'
     }
   },
   fields: {

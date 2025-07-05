@@ -3,14 +3,17 @@ import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
 import path from 'path';
 import astroI18next from 'astro-i18next';
+import dotenv from 'dotenv';
+
+// 加载环境变量
+dotenv.config();
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
-    // Required for some hosting, like Heroku
-    // host: true
+    host: true
   },
   adapter: node({
     mode: 'standalone'
@@ -18,6 +21,7 @@ export default defineConfig({
   integrations: [
     apostrophe({
       aposHost: 'http://localhost:3000',
+      apiKey: process.env.APOS_EXTERNAL_FRONT_KEY,
       widgetsMapping: './src/widgets',
       templatesMapping: './src/templates',
       includeResponseHeaders: [
@@ -48,6 +52,13 @@ export default defineConfig({
     })
   ],
   vite: {
+    server: {
+      hmr: false, // 禁用HMR以避免WebSocket错误
+      watch: {
+        usePolling: true, // 使用轮询检测文件变化
+        interval: 1000
+      }
+    },
     css: {
       preprocessorOptions: {
         scss: {

@@ -1,4 +1,5 @@
 import apostrophe from 'apostrophe';
+import 'dotenv/config'; // 加载.env文件中的环境变量
 
 export default apostrophe({
   root: import.meta,
@@ -16,6 +17,11 @@ export default apostrophe({
 
     // *********************************
     '@apostrophecms/vite': {},
+    '@apostrophecms/external-front': {
+      options: {
+        key: process.env.APOS_EXTERNAL_FRONT_KEY || 'hansen-website-key'
+      }
+    },
 
     // `className` options set custom CSS classes for Apostrophe core widgets.
     '@apostrophecms/rich-text-widget': {},
@@ -36,14 +42,6 @@ export default apostrophe({
     'stats-widget': {},
     'link': {},
     
-    // External front-end integration
-    '@apostrophecms/external-front': {
-      options: {
-        apiKeys: ['hansen-website-key']
-      }
-    },
-    '@apostrophecms/user-external-auth': {},
-
     // This module enables the /api/v1/products endpoint
     'article': {},
     
