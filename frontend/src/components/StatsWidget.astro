@@ -1,0 +1,87 @@
+import { getLangInfo, getLocalizedContent } from '../lib/multilingual';
+import { localizePath } from 'astro-i18next';
+import StatsCard from './StatsCard.astro';
+
+// 获取组件数据
+const { data } = Astro.props;
+const { title, description, statCards, layout, viewAllLink, viewAllText } = data;
+
+// 获取语言信息
+const { lang } = getLangInfo(Astro.url);
+
+// 列布局映射
+const columnClass = {
+  'two-columns': 'is-6', // 二等分
+  'three-columns': 'is-4', // 三等分
+  'four-columns': 'is-3', // 四等分
+}[layout || 'four-columns'];
+
+<section class="stats-widget section">
+  <div class="container">
+    {(title || description) && (
+      <div class="stats-header has-text-centered mb-6">
+        {title && <h2 class="title is-2">{title}</h2>}
+        {description && <p class="subtitle has-text-grey-light">{description}</p>}
+      </div>
+    )}
+    
+    <div class="columns is-multiline">
+      {statCards && statCards.map(card => (
+        <div class={`column ${columnClass}`}>
+          <StatsCard
+            statValue={card.statValue}
+            statLabel={card.statLabel}
+            icon={card.icon}
+            trend={card.trend !== 'none' ? card.trend : null}
+            trendValue={card.trendValue}
+            color={card.color}
+          />
+        </div>
+      ))}
+    </div>
+    
+    {viewAllLink && (
+      <div class="has-text-centered mt-5">
+        <a href={localizePath(viewAllLink)} class="button is-outline is-medium">
+          {getLocalizedContent(viewAllText, lang) || (lang === 'zh' ? '查看详细数据' : 'View detailed stats')}
+        </a>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+.stats-widget {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.stats-header {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stats-header .title {
+  margin-bottom: 1rem;
+}
+
+.stats-header .subtitle {
+  font-size: 1.25rem;
+}
+
+@media screen and (max-width: 768px) {
+  .stats-widget {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  
+  .stats-header .title {
+    font-size: 1.75rem !important;
+  }
+  
+  .stats-header .subtitle {
+    font-size: 1.1rem;
+  }
+}
+</style> 

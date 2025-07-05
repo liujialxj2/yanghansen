@@ -1,0 +1,14 @@
+{
+  "site": {
+    "title": "Hansen Yang Official Website",
+    "description": "Official website of basketball player Hansen Yang"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "career": "Career",
+    "news": "News",
+    "videos": "Videos",
+    "fanzone": "Fan Zone"
+  }
+} 

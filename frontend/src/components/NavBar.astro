@@ -1,0 +1,172 @@
+---
+import { apos } from '../lib/apos';
+import { getLangInfo, getLocalizedContent } from '../lib/multilingual';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { localizePath } from 'astro-i18next';
+
+const { url } = Astro;
+const { lang } = getLangInfo(url);
+
+// 导航链接数据
+const navLinks = [
+  {
+    title: {
+      zh: '首页',
+      en: 'Home'
+    },
+    url: '/'
+  },
+  {
+    title: {
+      zh: '关于杨瀚森',
+      en: 'About'
+    },
+    url: '/about'
+  },
+  {
+    title: {
+      zh: '职业生涯',
+      en: 'Career'
+    },
+    url: '/career'
+  },
+  {
+    title: {
+      zh: '新闻',
+      en: 'News'
+    },
+    url: '/news'
+  },
+  {
+    title: {
+      zh: '视频',
+      en: 'Videos'
+    },
+    url: '/videos'
+  },
+  {
+    title: {
+      zh: '粉丝社区',
+      en: 'Fan Zone'
+    },
+    url: '/fans'
+  }
+];
+
+// 获取全局设置
+const global = await apos.global.find();
+const siteTitle = getLocalizedContent(global?.siteTitle, lang) || '杨瀚森官方网站';
+
+// 检查当前页面是否为活动页面
+function isActive(navUrl) {
+  if (navUrl === '/' && url.pathname === '/') {
+    return true;
+  }
+  if (navUrl !== '/' && url.pathname.startsWith(navUrl)) {
+    return true;
+  }
+  return false;
+}
+---
+
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item logo" href={localizePath("/")}>
+        <span class="logo-text">{siteTitle}</span>
+      </a>
+      <a 
+        role="button" 
+        class="navbar-burger" 
+        aria-label="menu" 
+        aria-expanded="false" 
+        data-target="navbarBasic"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    
+    <div id="navbarBasic" class="navbar-menu">
+      <div class="navbar-end">
+        {navLinks.map(link => (
+          <a 
+            href={localizePath(link.url)} 
+            class={`navbar-item ${isActive(link.url) ? 'is-active' : ''}`}
+          >
+            {getLocalizedContent(link.title, lang)}
+          </a>
+        ))}
+        
+        <div class="navbar-item">
+          <LanguageSwitcher />
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // 汉堡菜单交互
+  document.addEventListener('DOMContentLoaded', () => {
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    
+    if ($navbarBurgers.length > 0) {
+      $navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+          
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+        });
+      });
+    }
+  });
+</script>
+
+<style>
+.navbar {
+  background-color: rgba(16, 16, 16, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 0;
+}
+
+.navbar-item {
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.navbar-item:hover,
+.navbar-item.is-active {
+  color: #E03A3E !important;
+  background-color: transparent !important;
+}
+
+.logo-text {
+  font-family: 'Montserrat', 'Noto Sans SC', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.navbar-burger {
+  color: white;
+}
+
+.navbar-burger span {
+  height: 2px;
+}
+
+@media screen and (max-width: 1023px) {
+  .navbar-menu.is-active {
+    background-color: rgba(16, 16, 16, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+</style> 

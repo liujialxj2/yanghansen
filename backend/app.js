@@ -30,6 +30,7 @@ export default apostrophe({
     // pieces
     article: {},
     author: {},
+    'career-stats-piece': {},
 
     // pages
     'default-page': {},

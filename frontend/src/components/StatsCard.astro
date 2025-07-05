@@ -1,0 +1,136 @@
+---
+// 统计数据卡片组件
+// 用于在主页和职业生涯页面展示关键统计数据
+
+import { getLangInfo } from '../lib/multilingual';
+
+// 获取组件参数
+const { statValue, statLabel, icon, trend, trendValue, color = 'primary' } = Astro.props;
+
+// 获取当前语言
+const { lang } = getLangInfo(Astro.url);
+
+// 趋势箭头方向和颜色
+let trendIcon = '';
+let trendClass = '';
+
+if (trend === 'up') {
+  trendIcon = 'fa-arrow-up';
+  trendClass = 'has-text-success';
+} else if (trend === 'down') {
+  trendIcon = 'fa-arrow-down';
+  trendClass = 'has-text-danger';
+} else {
+  trendIcon = 'fa-arrows-left-right';
+  trendClass = 'has-text-grey';
+}
+
+// 颜色映射
+const colorClass = {
+  primary: 'is-primary',
+  success: 'has-text-success',
+  info: 'has-text-info',
+  warning: 'has-text-warning',
+  danger: 'has-text-danger'
+}[color] || 'is-primary';
+---
+
+<div class="stat-card">
+  <div class="stat-header">
+    {icon && <span class="stat-icon"><i class={`fas ${icon}`}></i></span>}
+    <span class="stat-label">{statLabel}</span>
+  </div>
+  
+  <div class="stat-body">
+    <div class={`stat-number ${colorClass}`}>{statValue}</div>
+    
+    {trend && trendValue && (
+      <div class="stat-trend">
+        <span class={trendClass}>
+          <i class={`fas ${trendIcon}`}></i>
+          {trendValue}
+        </span>
+        <span class="trend-period">
+          {lang === 'zh' ? '较上赛季' : 'vs last season'}
+        </span>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+.stat-card {
+  background-color: #1A1A1A;
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: 100%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stat-icon {
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.stat-label {
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+}
+
+.stat-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  font-family: "Montserrat", "Noto Sans SC", sans-serif;
+}
+
+.stat-number.is-primary {
+  color: #E03A3E;
+}
+
+.stat-trend {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.stat-trend i {
+  margin-right: 0.25rem;
+}
+
+.trend-period {
+  margin-left: 0.5rem;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+@media screen and (max-width: 768px) {
+  .stat-number {
+    font-size: 2rem;
+  }
+}
+</style> 

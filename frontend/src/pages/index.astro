@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLangInfo } from '../lib/multilingual';
+
+const { lang } = getLangInfo(Astro.url);
+const title = lang === 'zh' ? '首页' : 'Home';
+---
+
+<BaseLayout title={title}>
+  <div class="hero is-fullheight-with-navbar has-hansenyoung-gradient">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title is-1">{lang === 'zh' ? '杨瀚森官方网站' : 'Hansen Yang Official Website'}</h1>
+        <h2 class="subtitle is-3">{lang === 'zh' ? '中国篮球新星，波特兰开拓者队球员' : 'Chinese Basketball Star, Portland Trail Blazers Player'}</h2>
+        <div class="mt-5">
+          <a href={lang === 'zh' ? '/about' : '/en/about'} class="button is-light is-large">
+            {lang === 'zh' ? '了解更多' : 'Learn More'}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <section class="section">
+    <div class="container">
+      <h2 class="title is-2 has-text-centered mb-6">
+        {lang === 'zh' ? '欢迎来到杨瀚森官方网站' : 'Welcome to Hansen Yang Official Website'}
+      </h2>
+      <div class="content has-text-centered">
+        <p class="is-size-5">
+          {lang === 'zh' 
+            ? '网站正在建设中，敬请期待更多内容。' 
+            : 'The website is under construction. Stay tuned for more content.'}
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout> 

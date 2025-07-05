@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "home": "首页",
+    "about": "关于杨瀚森",
+    "career": "职业生涯",
+    "news": "新闻",
+    "videos": "视频",
+    "fanzone": "粉丝社区",
+    "contact": "联系我们"
+  },
+  "home": {
+    "hero": {
+      "title": "杨瀚森",
+      "subtitle": "中国篮球新星，波特兰开拓者队球员",
+      "cta": "了解更多"
+    },
+    "stats": {
+      "title": "职业生涯数据",
+      "description": "杨瀚森的最新统计数据和职业生涯表现",
+      "viewAll": "查看详细数据",
+      "points": "场均得分",
+      "rebounds": "场均篮板",
+      "assists": "场均助攻",
+      "blocks": "场均盖帽",
+      "vsPrevious": "较上赛季"
+    },
+    "latestNews": {
+      "title": "最新动态",
+      "viewAll": "查看全部新闻"
+    },
+    "media": {
+      "title": "精彩瞬间",
+      "viewAll": "查看更多视频"
+    }
+  },
+  "about": {
+    "title": "关于杨瀚森",
+    "bio": {
+      "title": "个人简介",
+      "birthDate": "出生日期",
+      "birthPlace": "出生地",
+      "height": "身高",
+      "weight": "体重",
+      "position": "位置",
+      "team": "现役球队",
+      "number": "球衣号码"
+    },
+    "timeline": {
+      "title": "成长历程",
+      "viewMore": "查看更多"
+    },
+    "awards": {
+      "title": "荣誉奖项",
+      "viewAll": "查看全部荣誉"
+    }
+  },
+  "career": {
+    "title": "职业生涯",
+    "stats": {
+      "title": "数据统计",
+      "season": "赛季",
+      "team": "球队",
+      "gp": "出场",
+      "gs": "首发",
+      "min": "时间",
+      "pts": "得分",
+      "reb": "篮板",
+      "ast": "助攻",
+      "stl": "抢断",
+      "blk": "盖帽",
+      "fg": "投篮",
+      "fg3": "三分",
+      "ft": "罚球"
+    },
+    "highlights": {
+      "title": "高光时刻",
+      "viewAll": "查看全部"
+    },
+    "scouting": {
+      "title": "球探报告",
+      "strengths": "优势",
+      "weaknesses": "待提高",
+      "potential": "潜力评估"
+    }
+  },
+  "news": {
+    "title": "新闻中心",
+    "latest": "最新报道",
+    "featured": "精选报道",
+    "readMore": "阅读全文",
+    "categories": {
+      "all": "全部",
+      "team": "球队新闻",
+      "personal": "个人动态",
+      "interviews": "采访",
+      "media": "媒体报道"
+    },
+    "relatedNews": "相关新闻",
+    "shareThis": "分享"
+  },
+  "videos": {
+    "title": "视频中心",
+    "latest": "最新视频",
+    "categories": {
+      "all": "全部",
+      "highlights": "精彩集锦",
+      "interviews": "采访",
+      "behindScenes": "幕后花絮",
+      "training": "训练视频"
+    },
+    "watchNow": "观看",
+    "relatedVideos": "相关视频"
+  },
+  "fanzone": {
+    "title": "粉丝社区",
+    "gallery": "图片墙",
+    "fanArt": "粉丝作品",
+    "submit": "提交你的作品",
+    "wallpapers": "壁纸下载",
+    "social": "社交媒体",
+    "followUs": "关注我们"
+  },
+  "footer": {
+    "subscribe": {
+      "title": "订阅更新",
+      "description": "订阅我们的通讯，获取杨瀚森的最新消息",
+      "placeholder": "您的邮箱地址",
+      "button": "订阅"
+    },
+    "links": {
+      "browse": "浏览",
+      "other": "其他链接",
+      "privacy": "隐私政策",
+      "terms": "使用条款",
+      "contact": "联系我们"
+    },
+    "copyright": "© 2025 杨瀚森 Hansen Yang. All Rights Reserved."
+  },
+  "common": {
+    "loading": "加载中...",
+    "readMore": "阅读更多",
+    "viewMore": "查看更多",
+    "share": "分享",
+    "search": "搜索",
+    "back": "返回",
+    "next": "下一页",
+    "previous": "上一页"
+  }
+} 

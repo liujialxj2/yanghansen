@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
 import path from 'path';
+import astroI18next from 'astro-i18next';
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,22 +15,38 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone'
   }),
-  integrations: [apostrophe({
-    aposHost: 'http://localhost:3000',
-    widgetsMapping: './src/widgets',
-    templatesMapping: './src/templates',
-    includeResponseHeaders: [
-      'content-security-policy',
-      'strict-transport-security',
-      'x-frame-options',
-      'referrer-policy',
-      'cache-control'
-    ],
-    excludeRequestHeaders: [
-      // For hosting on multiple servers, block the host header
-      // 'host'
-    ]
-  })],
+  integrations: [
+    apostrophe({
+      aposHost: 'http://localhost:3000',
+      widgetsMapping: './src/widgets',
+      templatesMapping: './src/templates',
+      includeResponseHeaders: [
+        'content-security-policy',
+        'strict-transport-security',
+        'x-frame-options',
+        'referrer-policy',
+        'cache-control'
+      ],
+      excludeRequestHeaders: [
+        // For hosting on multiple servers, block the host header
+        // 'host'
+      ]
+    }),
+    // 添加多语言支持
+    astroI18next({
+      defaultLocale: 'zh',
+      locales: ['zh', 'en'],
+      i18nextServer: {
+        debug: true
+      },
+      i18nextClient: {
+        debug: true
+      },
+      routing: {
+        prefixDefaultLocale: false
+      }
+    })
+  ],
   vite: {
     css: {
       preprocessorOptions: {

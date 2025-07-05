@@ -1,0 +1,215 @@
+---
+// 导入需要的组件和库
+import { apos } from '../lib/apos';
+import { getLangInfo } from '../lib/multilingual';
+import i18n from 'i18next';
+import { localizePath } from 'astro-i18next';
+
+// 获取组件数据
+const { data } = Astro.props;
+const { title, subtitle, backgroundType, height, textColor, textAlign, contentOverlay, buttons } = data;
+
+// 获取语言信息
+const { lang } = getLangInfo(Astro.url);
+
+// 高度类映射
+const heightClasses = {
+  full: 'is-fullheight-with-navbar',
+  large: 'is-large',
+  medium: '',
+  small: 'is-small'
+};
+
+// 文字颜色类映射
+const textColorClasses = {
+  white: 'has-text-white',
+  black: 'has-text-black',
+  primary: 'has-text-primary'
+};
+
+// 文字对齐类映射
+const textAlignClasses = {
+  center: 'has-text-centered',
+  left: 'has-text-left',
+  right: 'has-text-right'
+};
+
+// 背景图片处理
+let backgroundImageUrl = '';
+if (backgroundType === 'image' && data.backgroundImage?._pieces?.length) {
+  const image = data.backgroundImage._pieces[0];
+  backgroundImageUrl = apos.attachment.url(image.attachment, { size: 'full' });
+}
+
+// 背景视频处理
+let videoUrl = '';
+if (backgroundType === 'video' && data.backgroundVideo?._pieces?.length) {
+  const video = data.backgroundVideo._pieces[0];
+  if (video.video && video.video.url) {
+    videoUrl = video.video.url;
+  }
+}
+
+// 渐变背景处理
+let gradientStyle = '';
+if (backgroundType === 'gradient' && data.gradientStart && data.gradientEnd) {
+  gradientStyle = `background: linear-gradient(135deg, ${data.gradientStart} 0%, ${data.gradientEnd} 100%);`;
+}
+
+// 纯色背景处理
+let colorStyle = '';
+if (backgroundType === 'color' && data.backgroundColor) {
+  colorStyle = `background-color: ${data.backgroundColor};`;
+}
+
+// 构建样式类
+const heroClasses = [
+  'hero',
+  heightClasses[height || 'full'],
+  textColorClasses[textColor || 'white'],
+  textAlignClasses[textAlign || 'center']
+].filter(Boolean).join(' ');
+
+// 构建内容样式
+const contentClasses = [
+  'hero-content',
+  contentOverlay ? 'with-overlay' : ''
+].filter(Boolean).join(' ');
+---
+
+<section class={heroClasses}>
+  {backgroundType === 'image' && backgroundImageUrl && (
+    <div class="hero-background">
+      <img src={backgroundImageUrl} alt="" class="hero-image" />
+      <div class="hero-background-overlay"></div>
+    </div>
+  )}
+  
+  {backgroundType === 'video' && videoUrl && (
+    <div class="hero-background">
+      <video autoplay muted loop playsinline class="hero-video">
+        <source src={videoUrl} type="video/mp4">
+      </video>
+      <div class="hero-background-overlay"></div>
+    </div>
+  )}
+  
+  {backgroundType === 'gradient' && (
+    <div class="hero-background" style={gradientStyle}></div>
+  )}
+  
+  {backgroundType === 'color' && (
+    <div class="hero-background" style={colorStyle}></div>
+  )}
+  
+  <div class="hero-body">
+    <div class="container">
+      <div class={contentClasses}>
+        {title && <h1 class="title is-1">{title}</h1>}
+        {subtitle && <h2 class="subtitle is-3">{subtitle}</h2>}
+        
+        {buttons && buttons.length > 0 && (
+          <div class="hero-buttons">
+            {buttons.map((button) => {
+              const buttonClass = button.style === 'outline' 
+                ? 'button is-medium is-outline' 
+                : button.style === 'link'
+                  ? 'button is-medium is-text' 
+                  : 'button is-medium is-primary';
+                  
+              return (
+                <a href={localizePath(button.url)} class={buttonClass}>
+                  {button.label}
+                </a>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.hero-image,
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.hero-content.with-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.subtitle {
+  margin-bottom: 2rem;
+  font-weight: 400;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-buttons {
+  margin-top: 2rem;
+}
+
+.hero-buttons .button {
+  margin: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    font-size: 2.5rem !important;
+  }
+  
+  .subtitle {
+    font-size: 1.25rem !important;
+  }
+}
+</style> 

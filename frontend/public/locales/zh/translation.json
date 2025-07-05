@@ -1,0 +1,14 @@
+{
+  "site": {
+    "title": "杨瀚森官方网站",
+    "description": "杨瀚森篮球运动员的官方网站"
+  },
+  "nav": {
+    "home": "首页",
+    "about": "关于",
+    "career": "职业生涯",
+    "news": "新闻",
+    "videos": "视频",
+    "fanzone": "粉丝专区"
+  }
+} 

@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Hansen",
+    "career": "Career",
+    "news": "News",
+    "videos": "Videos",
+    "fanzone": "Fan Zone",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": {
+      "title": "Hansen Yang",
+      "subtitle": "Chinese Basketball Star, Portland Trail Blazers Player",
+      "cta": "Learn More"
+    },
+    "stats": {
+      "title": "Career Statistics",
+      "description": "Hansen Yang's latest statistics and career performance",
+      "viewAll": "View detailed stats",
+      "points": "PPG",
+      "rebounds": "RPG",
+      "assists": "APG",
+      "blocks": "BPG",
+      "vsPrevious": "vs last season"
+    },
+    "latestNews": {
+      "title": "Latest News",
+      "viewAll": "View all news"
+    },
+    "media": {
+      "title": "Highlight Moments",
+      "viewAll": "View more videos"
+    }
+  },
+  "about": {
+    "title": "About Hansen Yang",
+    "bio": {
+      "title": "Personal Profile",
+      "birthDate": "Birth Date",
+      "birthPlace": "Birth Place",
+      "height": "Height",
+      "weight": "Weight",
+      "position": "Position",
+      "team": "Current Team",
+      "number": "Jersey Number"
+    },
+    "timeline": {
+      "title": "Career Timeline",
+      "viewMore": "View more"
+    },
+    "awards": {
+      "title": "Awards & Honors",
+      "viewAll": "View all awards"
+    }
+  },
+  "career": {
+    "title": "Career",
+    "stats": {
+      "title": "Statistics",
+      "season": "Season",
+      "team": "Team",
+      "gp": "GP",
+      "gs": "GS",
+      "min": "MIN",
+      "pts": "PTS",
+      "reb": "REB",
+      "ast": "AST",
+      "stl": "STL",
+      "blk": "BLK",
+      "fg": "FG%",
+      "fg3": "3P%",
+      "ft": "FT%"
+    },
+    "highlights": {
+      "title": "Highlights",
+      "viewAll": "View all"
+    },
+    "scouting": {
+      "title": "Scouting Report",
+      "strengths": "Strengths",
+      "weaknesses": "Areas for Improvement",
+      "potential": "Potential Assessment"
+    }
+  },
+  "news": {
+    "title": "News Center",
+    "latest": "Latest Articles",
+    "featured": "Featured Stories",
+    "readMore": "Read more",
+    "categories": {
+      "all": "All",
+      "team": "Team News",
+      "personal": "Personal Updates",
+      "interviews": "Interviews",
+      "media": "Media Coverage"
+    },
+    "relatedNews": "Related News",
+    "shareThis": "Share"
+  },
+  "videos": {
+    "title": "Video Center",
+    "latest": "Latest Videos",
+    "categories": {
+      "all": "All",
+      "highlights": "Highlights",
+      "interviews": "Interviews",
+      "behindScenes": "Behind the Scenes",
+      "training": "Training Videos"
+    },
+    "watchNow": "Watch Now",
+    "relatedVideos": "Related Videos"
+  },
+  "fanzone": {
+    "title": "Fan Zone",
+    "gallery": "Photo Gallery",
+    "fanArt": "Fan Art",
+    "submit": "Submit Your Work",
+    "wallpapers": "Wallpapers",
+    "social": "Social Media",
+    "followUs": "Follow Us"
+  },
+  "footer": {
+    "subscribe": {
+      "title": "Subscribe",
+      "description": "Subscribe to our newsletter for the latest updates",
+      "placeholder": "Your email address",
+      "button": "Subscribe"
+    },
+    "links": {
+      "browse": "Browse",
+      "other": "Other Links",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use",
+      "contact": "Contact Us"
+    },
+    "copyright": "© 2025 Hansen Yang. All Rights Reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "readMore": "Read More",
+    "viewMore": "View More",
+    "share": "Share",
+    "search": "Search",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  }
+} 

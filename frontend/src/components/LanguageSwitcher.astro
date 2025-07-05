@@ -1,0 +1,33 @@
+---
+import { getLangInfo, getAlternateLangUrl } from '../lib/multilingual';
+
+const { url } = Astro;
+const { lang } = getLangInfo(url);
+const alternateUrl = getAlternateLangUrl(url);
+---
+
+<div class="language-switch">
+  <a href={alternateUrl} class="button is-small">
+    {lang === 'zh' ? 'English' : '中文'}
+  </a>
+</div>
+
+<style>
+.language-switch {
+  margin-left: 1rem;
+}
+
+.language-switch .button {
+  font-weight: 500;
+  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.language-switch .button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+</style> 
