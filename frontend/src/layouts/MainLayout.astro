@@ -1,0 +1,54 @@
+---
+import '../styles/main.scss';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+// import { HeadHrefLangs } from "astro-i18next/components";
+import i18next from "i18next";
+
+interface Props {
+  title: string;
+  page: any;
+  description?: string;
+}
+
+// 获取当前语言
+const currentLocale = i18next.language || 'zh';
+
+const { title, page, description } = Astro.props;
+const metaDescription = description || page?.seoDescription || '杨瀚森（Hansen Yang）官方网站 - NBA开拓者队球员';
+---
+
+<!DOCTYPE html>
+<html lang={currentLocale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={metaDescription} />
+    <!-- <HeadHrefLangs /> -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body class="has-navbar-fixed-top">
+    <div id="page-wrapper">
+      <Header page={page} />
+      <main id="main-content">
+        <slot />
+      </main>
+      <Footer page={page} />
+    </div>
+    <script>
+      // 动态调整固定导航栏的padding
+      document.addEventListener('DOMContentLoaded', () => {
+        const header = document.querySelector('header.navbar');
+        const mainContent = document.getElementById('main-content');
+        
+        if (header && mainContent) {
+          const headerHeight = header.offsetHeight;
+          mainContent.style.paddingTop = `${headerHeight}px`;
+        }
+      });
+    </script>
+  </body>
+</html> 
