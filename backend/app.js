@@ -20,6 +20,29 @@ export default apostrophe({
     // have a minimal configuration here to turn them on: `moduleName: {}`
 
     // *********************************
+    '@apostrophecms/express': {
+      options: {
+        session: {
+          // 必须提供一个安全的会话密钥
+          secret: 'hansenyangwebsite'
+        }
+      }
+    },
+    
+    '@apostrophecms/user': {
+      options: {
+        admin: {
+          // 默认管理员账户
+          add: [{
+            username: 'admin',
+            password: 'admin',
+            title: 'Admin User',
+            role: 'admin'
+          }]
+        }
+      }
+    },
+    
     '@apostrophecms/vite': {},
 
     // `className` options set custom CSS classes for Apostrophe core widgets.

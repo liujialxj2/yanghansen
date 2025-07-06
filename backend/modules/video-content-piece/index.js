@@ -2,7 +2,9 @@ module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Video Content',
-    pluralLabel: 'Video Contents'
+    pluralLabel: 'Video Contents',
+    alias: 'video',
+    commandsLabel: 'Video Content'
   },
   fields: {
     add: {

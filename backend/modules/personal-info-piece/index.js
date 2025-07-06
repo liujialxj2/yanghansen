@@ -3,7 +3,7 @@ module.exports = {
   options: {
     label: '个人信息 / Personal Info',
     pluralLabel: '个人信息 / Personal Info',
-    alias: 'personalInfo',
+    alias: 'personal-info',
     commandsLabel: '个人信息 / Personal Info'
   },
   fields: {

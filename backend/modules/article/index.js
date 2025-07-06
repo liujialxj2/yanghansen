@@ -5,7 +5,9 @@ module.exports = {
   options: {
     label: 'Article',
     pluralLabel: 'Articles',
-    shortcut: 'Shift+Alt+A'
+    shortcut: 'Shift+Alt+A',
+    alias: 'article',
+    commandsLabel: 'Article'
   },
   fields: {
     add: {
