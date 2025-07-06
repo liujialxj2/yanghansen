@@ -91,31 +91,81 @@
 
 ---
 
-### **第三部分：ApostropheCMS内容模型规划**
+### **第三部分：混合式内容管理规划**
 
-为了充分利用Apollo模板的ApostropheCMS系统，我们将按照以下方式构建内容模型:
+为了提高网站性能和维护效率，我们采用混合式内容管理策略，将内容分为"静态实现"和"CMS管理"两部分：
 
-**1. 页面类型 (Page Types)**
-*   **home-page**: 提供三种布局选项(Minimal、Foundation、Showcase)
-*   **default-page**: 通用内容页面，用于"关于"等静态内容
-*   **article-page**: 用于展示文章列表，支持分页和筛选
-*   **article-show-page**: 用于展示单篇文章详情
+**1. 静态实现的页面与内容**
+*   **首页(home-page)主体结构**：
+    * 英雄区域(Hero)和主布局通过代码直接实现
+    * 数据概览区域使用JSON数据源，定期手动更新
+    * "最新动态"区域链接到CMS管理的动态内容
+*   **关于页面(about-page)**：
+    * 个人简介、成长经历、价值观等内容以静态方式实现
+    * 资料内容不频繁变化，直接编码进模板中
+*   **职业生涯页面(career-page)**：
+    * 页面基础布局静态实现
+    * 统计数据使用JSON文件存储，定期更新
+    * 球探报告和高光时刻区域通过代码实现
 
-**2. 内容片段类型 (Piece Types)**
-*   **personal-info**: 存储球员基本信息
-*   **career-stats**: 记录每个赛季的数据统计
-*   **award**: 存储所有荣誉和奖项
-*   **article**: 新闻和文章
-*   **author**: 文章作者信息
-*   **media-gallery**: 图片库
-*   **video-content**: 视频内容
-*   **fan-content**: 粉丝作品
+**2. CMS管理的动态内容**
+*   **新闻文章(article)**：
+    * 使用ApostropheCMS管理所有新闻内容
+    * 支持分类、标签、过滤和分页功能
+    * 中英文双语版本完全通过CMS管理
+*   **视频内容(video-content)**：
+    * 通过CMS管理视频元数据和分类
+    * 支持视频链接或嵌入第三方平台视频
+*   **媒体库(media-gallery)**：
+    * 管理图片资源和分类
+    * 支持批量上传和标签管理
+*   **粉丝内容(fan-content)**：
+    * 主要是壁纸下载区域通过CMS管理
+    * 方便定期更新和分类管理
 
-**3. 组件类型 (Widget Types)**
-*   **hero-widget**: 用于首页和关键页面顶部的视觉冲击
-*   **rows-widget**: 响应式行列布局系统
-*   **grid-layout-widget**: CSS网格布局系统
-*   **slideshow-widget**: 轮播图组件，展示比赛照片
-*   **accordion-widget**: 折叠面板，用于FAQs和分类内容
-*   **card-widget**: 卡片组件，展示球员数据、新闻和活动
-*   **link-widget**: 链接和按钮组件 
+**3. 内容模型设计**
+
+*   **页面类型 (Page Types)**
+    * `home-page`: 静态页面结构，动态内容区域连接CMS
+    * `about-page`: 完全静态实现
+    * `career-page`: 静态布局+JSON数据源
+    * `article-page`: CMS管理的文章列表页，支持分页和筛选
+    * `article-show-page`: CMS管理的单篇文章详情页
+    * `video-page`: CMS管理的视频中心
+    * `fan-zone-page`: 部分静态实现，壁纸下载区域连接CMS
+
+*   **CMS内容片段类型 (Piece Types)**
+    * `article`: 新闻和文章（完全CMS管理）
+    * `author`: 文章作者信息（完全CMS管理）
+    * `video-content`: 视频内容（完全CMS管理）
+    * `media-gallery`: 图片库（完全CMS管理）
+    * `fan-content`: 粉丝壁纸（完全CMS管理）
+
+*   **静态/半静态数据源**
+    * `personal-info.json`: 球员基本信息（手动更新）
+    * `career-stats.json`: 赛季数据统计（手动更新）
+    * `awards.json`: 荣誉和奖项记录（手动更新）
+
+*   **组件类型 (Widget Types)**
+    * **静态组件**:
+        * `hero-widget`: 首页和关键页面顶部的视觉区域
+        * `stats-widget`: 展示来自JSON的统计数据
+        * `timeline-widget`: 展示职业生涯时间线
+    * **动态组件**:
+        * `news-card-widget`: 展示CMS中的新闻文章
+        * `video-player-widget`: 播放CMS管理的视频
+        * `gallery-widget`: 展示CMS管理的图片
+
+**4. 数据流设计**
+
+* **静态到动态的链接**:
+    * 首页的"最新新闻"区域链接到CMS管理的文章
+    * 职业生涯页面的"相关视频"链接到CMS管理的视频内容
+    
+* **API调用**:
+    * 静态页面通过API调用获取CMS中的最新内容
+    * 使用客户端缓存减少重复请求
+
+* **数据更新流程**:
+    * CMS内容: 通过后台界面实时更新
+    * JSON数据: 通过代码仓库提交，定期更新（如每周或每场比赛后） 
