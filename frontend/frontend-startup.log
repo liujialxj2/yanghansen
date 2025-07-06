@@ -1,0 +1,9 @@
+
+> apollo-frontend@1.0.0 dev
+> APOS_EXTERNAL_FRONT_KEY=dev astro dev
+
+06:40:41 [@astrojs/node] Enabling sessions with filesystem storage
+06:40:41 [types] Generated 1ms
+06:40:41 [content] Syncing content
+06:40:41 [content] Synced content
+06:40:41 [vite] ✨ optimized dependencies changed. reloading

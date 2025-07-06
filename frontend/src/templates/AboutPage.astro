@@ -1,0 +1,129 @@
+---
+import { t } from "i18next";
+import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
+
+const { aposData } = Astro.props;
+const { page } = aposData;
+
+// 模拟个人信息数据 - 实际应从CMS获取
+const personalInfo = {
+  height: "1.93 m (6'4\")",
+  weight: "88 kg (195 lbs)",
+  born: "1998-05-15",
+  position: "控球后卫 / Point Guard",
+  team: "波特兰开拓者队 / Portland Trail Blazers"
+};
+---
+
+<div class="about-page">
+  <section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-2">{t("about.title")}</h1>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="container">
+      <div class="columns is-variable is-8">
+        <div class="column is-7">
+          <div class="content">
+            <h2 class="title is-3">{t("about.bio.title")}</h2>
+            <h3 class="subtitle is-5 mb-5">{t("about.bio.subtitle")}</h3>
+            
+            <AposArea area={page.main} />
+          </div>
+        </div>
+        
+        <div class="column is-5">
+          <div class="info-card">
+            <div class="card-image">
+              <figure class="image">
+                <img src="/images/profile.jpg" alt="Hansen Yang" />
+              </figure>
+            </div>
+            
+            <div class="card-content">
+              <h3 class="title is-4 mb-4">Hansen Yang | 杨瀚森</h3>
+              
+              <table class="info-table">
+                <tbody>
+                  <tr>
+                    <th>{t("about.stats.height")}</th>
+                    <td>{personalInfo.height}</td>
+                  </tr>
+                  <tr>
+                    <th>{t("about.stats.weight")}</th>
+                    <td>{personalInfo.weight}</td>
+                  </tr>
+                  <tr>
+                    <th>{t("about.stats.born")}</th>
+                    <td>{personalInfo.born}</td>
+                  </tr>
+                  <tr>
+                    <th>{t("about.stats.position")}</th>
+                    <td>{personalInfo.position}</td>
+                  </tr>
+                  <tr>
+                    <th>{t("about.stats.team")}</th>
+                    <td>{personalInfo.team}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="timeline-section mt-6">
+        <h2 class="title is-3 mb-5">{t("about.timeline.title")}</h2>
+        
+        <!-- 在这里可以添加时间线内容 -->
+        <AposArea area={page.timeline} />
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .hero {
+    background-color: #101010;
+  }
+  
+  .info-card {
+    background-color: #1A1A1A;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .info-card .card-image {
+    border-bottom: 3px solid #E03A3E;
+  }
+  
+  .info-card .card-content {
+    padding: 1.5rem;
+  }
+  
+  .info-table {
+    width: 100%;
+  }
+  
+  .info-table th,
+  .info-table td {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .info-table th {
+    color: #E03A3E;
+    font-weight: 500;
+    width: 40%;
+  }
+  
+  .timeline-section {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+</style> 

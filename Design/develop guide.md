@@ -1,626 +1,485 @@
-# 杨瀚森官方网站开发指南
+# ApostropheCMS与Astro集成开发指南
 
-本文档基于[ApostropheCMS官方文档](https://docs.apostrophecms.org/)和[Astro官方文档](https://docs.astro.build/en/guides/cms/apostrophecms/)，为开发团队提供针对本项目的技术指导，重点关注ApostropheCMS和Astro集成开发的关键技术点。
+## 1. 项目架构概述
 
-## 一、ApostropheCMS + Astro 核心架构概述
+本项目采用现代化前后端分离架构，具体构成如下：
 
-### 1. 基础技术栈
+- **后端**：ApostropheCMS内容管理系统
+  - 负责内容管理、用户权限和数据存储
+  - 提供API接口供前端获取内容
+  - 使用MongoDB作为数据库
 
-- **后端**: ApostropheCMS (Node.js)
-- **前端**: Astro
-- **数据库**: MongoDB
-- **样式框架**: Bulma CSS
-- **部署**: 支持Apostrophe托管或第三方服务器
+- **前端**：Astro前端框架
+  - 负责内容渲染和用户界面
+  - 支持部分组件的岛屿架构(Islands Architecture)
+  - 集成Bulma CSS框架进行样式管理
 
-### 2. 项目结构
+- **国际化**：支持中英文双语内容
+  - 使用i18next管理翻译
+  - 内容和UI元素双语支持
 
-本项目采用前后端分离的结构，分为两个主要部分：
-- `/backend` - ApostropheCMS内容管理系统
-- `/frontend` - Astro前端应用
+## 2. 环境设置
 
-## 二、模块配置与组织
+### 前提条件
 
-### 1. ApostropheCMS模块体系
+- Node.js 18+
+- MongoDB 6.0+
+- Git
 
-ApostropheCMS采用模块化架构，每个功能都封装在一个模块中。本项目中的模块类型包括：
+### 关键环境变量
 
-- **页面类型模块** (Page Types): 如`home-page`、`about-page`、`career-page`等
-- **内容片段模块** (Piece Types): 如`personal-info-piece`、`career-stats-piece`、`article`等
-- **组件模块** (Widget Types): 如`hero-widget`、`stats-widget`、`timeline-widget`等
-- **核心系统模块**: 如`@apostrophecms/page`、`@apostrophecms/global`等
+两个项目必须共享相同的密钥以确保安全通信：
 
-### 2. 模块文件结构
-
-每个自定义模块通常包含以下文件结构：
-
-```
-modules/module-name/
-  ├── index.js          # 主模块配置
-  ├── lib/              # 辅助函数和工具
-  ├── public/           # 静态资源
-  └── views/            # 模板文件（仅用于后端渲染）
+```bash
+# 在后端和前端项目中都需要设置相同的值
+export APOS_EXTERNAL_FRONT_KEY=hansen-website-key
 ```
 
-### 3. 模块配置示例
+其他重要环境变量：
+
+前端环境变量(`frontend/.env`)：
+```
+PORT=4321
+APOS_HOST="http://localhost:3000"
+PUBLIC_DEV_MODE=true
+PUBLIC_LOG_LEVEL="debug"
+PUBLIC_LOCALE="zh"
+```
+
+后端环境变量(`backend/.env`)：
+```
+APOS_MONGODB_URI=mongodb://127.0.0.1:27017/hansenyang
+NODE_ENV=development
+PORT=3000
+LANG=zh
+APOS_SESSION_SECRET=hansenyangwebsite
+APOS_API_KEY=dev_api_key_hansenyangwebsite
+```
+
+## 3. ApostropheCMS后端配置
+
+### 内容模型设计
+
+ApostropheCMS使用模块化设计，通过以下几种主要类型构建内容：
+
+1. **页面类型(Page Types)**：定义网站不同类型的页面
+   ```javascript
+   // 例：后端/modules/about-page/index.js
+   module.exports = {
+     extend: '@apostrophecms/page-type',
+     options: {
+       label: '关于页面'
+     },
+     fields: {
+       add: {
+         main: {
+           type: 'area',
+           options: {
+             widgets: {
+               'hero-widget': {},
+               'timeline-widget': {}
+             }
+           }
+         }
+       }
+     }
+   };
+   ```
+
+2. **内容片段类型(Piece Types)**：可重复使用的内容单元
+   ```javascript
+   // 例：后端/modules/career-stats-piece/index.js
+   module.exports = {
+     extend: '@apostrophecms/piece-type',
+     options: {
+       label: {
+         zh: '职业数据',
+         en: 'Career Stats'
+       }
+     },
+     fields: {
+       add: {
+         season: {
+           type: 'string',
+           label: {
+             zh: '赛季',
+             en: 'Season'
+           }
+         },
+         // 其他字段...
+       }
+     }
+   };
+   ```
+
+3. **组件类型(Widget Types)**：可在页面区域中添加的可视化组件
+   ```javascript
+   // 例：后端/modules/hero-widget/index.js
+   module.exports = {
+     extend: '@apostrophecms/widget-type',
+     options: {
+       label: {
+         zh: '英雄区块',
+         en: 'Hero Section'
+       }
+     },
+     fields: {
+       add: {
+         heading: {
+           type: 'string',
+           label: {
+             zh: '标题',
+             en: 'Heading'
+           }
+         },
+         // 其他字段...
+       }
+     }
+   };
+   ```
+
+### 多语言配置
+
+在字段定义中使用语言对象：
 
 ```javascript
-// modules/personal-info-piece/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    label: 'Personal Info',
-    pluralLabel: 'Personal Info'
-  },
-  fields: {
-    add: {
-      fullName: {
-        type: 'string',
-        label: {
-          zh: '全名',
-          en: 'Full Name'
-        },
-        required: true
-      },
-      // 其他字段...
-    },
-    group: {
-      basics: {
-        label: '基本信息',
-        fields: ['fullName', 'birthDate', 'position']
-      },
-      // 其他分组...
-    }
-  }
-};
-```
-
-## 三、内容模型设计
-
-### 1. 字段类型
-
-ApostropheCMS提供多种内置字段类型，本项目将主要使用：
-
-- `string`: 文本字段，用于姓名、标题等
-- `area`: 富内容区域，可包含多种组件
-- `attachment`: 文件上传，用于图片、视频等媒体
-- `relationship`: 内容关联，如文章与作者的关联
-- `array`: 数组字段，用于统计数据等重复内容
-- `date`: 日期字段，用于比赛日期、出生日期等
-- `object`: 复合对象字段，用于复杂数据结构
-
-### 2. 关系型数据
-
-对于关联数据（如文章与作者），使用`relationship`字段：
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  // ...
-  fields: {
-    add: {
-      // ...
-      author: {
-        type: 'relationship',
-        label: '作者',
-        withType: 'author',
-        max: 1
+fields: {
+  add: {
+    title: {
+      type: 'string',
+      label: {
+        zh: '标题',
+        en: 'Title'
       }
     }
   }
-};
+}
 ```
 
-### 3. 条件字段
+## 4. Astro前端配置
 
-对于需要根据其他字段值动态显示的内容，使用条件字段：
+### 基本配置
 
-```javascript
-// 例：根据背景类型显示不同字段
-backgroundType: {
-  type: 'select',
-  choices: [
-    { label: '图片', value: 'image' },
-    { label: '视频', value: 'video' },
-    { label: '渐变色', value: 'gradient' }
-  ]
-},
-backgroundImage: {
-  type: 'attachment',
-  if: {
-    backgroundType: 'image'
-  }
-},
-// 类似的视频和渐变色字段...
-```
-
-## 四、多语言实现
-
-### 1. 静态内容国际化
-
-在Astro前端，使用i18n扩展处理静态UI内容：
+在`astro.config.mjs`中设置：
 
 ```javascript
-// frontend/astro.config.mjs
 export default defineConfig({
-  // ...
+  output: 'server', // 启用服务端渲染
+  adapter: node({
+    mode: 'standalone'
+  }),
   i18n: {
     defaultLocale: 'zh',
     locales: ['zh', 'en'],
     routing: {
       prefixDefaultLocale: false
     }
-  }
-});
-```
-
-### 2. 动态内容国际化
-
-ApostropheCMS中的内容字段可以设置为多语言：
-
-```javascript
-module.exports = {
-  // ...
-  options: {
-    i18n: true
   },
-  fields: {
-    add: {
-      title: {
-        type: 'string',
-        label: {
-          zh: '标题',
-          en: 'Title'
-        }
-      }
-      // 其他字段...
-    }
-  }
-};
-```
-
-### 3. 语言切换实现
-
-在前端实现语言切换组件，需保持URL结构一致：
-- 中文URL: `/about`
-- 英文URL: `/en/about`
-
-## 五、Astro与ApostropheCMS集成详解
-
-### 1. 先决条件
-
-要集成ApostropheCMS和Astro，需要满足以下条件：
-
-1. **设置按需渲染的Astro项目**：
-   - 安装Node.js适配器
-   - 在`astro.config.mjs`中配置`output: 'server'`
-
-2. **配置ApostropheCMS项目**：
-   - 设置环境变量`APOS_EXTERNAL_FRONT_KEY`（可以是任意随机字符串）
-   - 推荐使用Apostrophe CLI工具快速设置
-
-### 2. 设置项目通信
-
-Astro项目和ApostropheCMS项目需要使用相同的`APOS_EXTERNAL_FRONT_KEY`环境变量值来实现相互通信：
-
-```bash
-# 在两个项目中设置相同的环境变量
-export APOS_EXTERNAL_FRONT_KEY=hansen-website-key
-```
-
-### 3. 安装依赖
-
-在Astro项目中安装以下依赖：
-
-```bash
-npm install @apostrophecms/apostrophe-astro dayjs
-```
-
-### 4. 配置Astro
-
-修改`astro.config.mjs`文件，添加Apostrophe集成：
-
-```javascript
-// frontend/astro.config.mjs
-import { defineConfig } from 'astro';
-import node from '@astrojs/node';
-import apostrophe from '@apostrophecms/apostrophe-astro';
-
-export default defineConfig({
-  output: 'server',
-  adapter: node({
-    mode: 'standalone'
-  }),
-  integrations: [
-    apostrophe({
-      // ApostropheCMS服务器地址，默认为localhost:3000
-      aposHost: process.env.APOS_HOST || 'http://localhost:3000'
-    })
-  ]
+  // 其他配置...
 });
 ```
 
-### 5. 组件映射系统
+### 连接ApostropheCMS与Astro组件
 
-在Astro项目中创建组件映射文件，将ApostropheCMS中的组件类型与Astro组件关联：
+1. **组件映射**：将ApostropheCMS小部件映射到Astro组件
 
 ```javascript
 // frontend/src/widgets/index.js
-import RichTextWidget from './RichTextWidget.astro';
-import ImageWidget from './ImageWidget.astro';
 import HeroWidget from './HeroWidget.astro';
 import StatsWidget from './StatsWidget.astro';
 
-export default {
-  '@apostrophecms/rich-text': RichTextWidget,
-  '@apostrophecms/image': ImageWidget,
+const widgetComponents = {
   'hero-widget': HeroWidget,
-  'stats-widget': StatsWidget,
+  'stats-widget': StatsWidget
   // 其他组件映射...
 };
+
+export default widgetComponents;
 ```
 
-### 6. 创建组件示例
-
-富文本组件示例：
-
-```astro
-// frontend/src/widgets/RichTextWidget.astro
----
-const { widget } = Astro.props;
----
-
-<div class="rich-text" set:html={widget.content}></div>
-```
-
-图片组件示例：
-
-```astro
-// frontend/src/widgets/ImageWidget.astro
----
-import { getAttachmentUrl } from '../lib/attachments.js';
-
-const { widget } = Astro.props;
-const image = widget.image;
----
-
-{image && (
-  <img 
-    src={getAttachmentUrl(image)} 
-    alt={image.alt || image.title || 'Image'} 
-    width={image.width}
-    height={image.height}
-  />
-)}
-```
-
-### 7. 页面类型映射
-
-创建页面模板并映射到ApostropheCMS的页面类型：
+2. **页面模板映射**：将ApostropheCMS页面类型映射到Astro模板
 
 ```javascript
 // frontend/src/templates/index.js
 import HomePage from './HomePage.astro';
-import DefaultPage from './DefaultPage.astro';
 import AboutPage from './AboutPage.astro';
 import CareerPage from './CareerPage.astro';
-import ArticleIndexPage from './ArticleIndexPage.astro';
-import ArticleShowPage from './ArticleShowPage.astro';
 
-export default {
+const templateComponents = {
   '@apostrophecms/home-page': HomePage,
-  '@apostrophecms/default-page': DefaultPage,
   'about-page': AboutPage,
   'career-page': CareerPage,
-  '@apostrophecms/article-page:index': ArticleIndexPage,
-  '@apostrophecms/article-page:show': ArticleShowPage
+  // 其他模板...
 };
+
+export default templateComponents;
 ```
 
-### 8. 创建动态路由组件
+### 通用路由组件
 
-在`src/pages`目录创建`[...slug].astro`文件，用于处理所有动态路由并获取ApostropheCMS数据：
+使用Astro动态路由获取任何页面的数据：
 
 ```astro
 ---
-import { getAposData } from '@apostrophecms/apostrophe-astro';
-import templates from '../templates/index.js';
-import Layout from '../layouts/MainLayout.astro';
+// frontend/src/pages/[...slug].astro
+import { useApostropheData } from '@apostrophecms/apostrophe-astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import templateComponents from '../templates';
 
-export const prerender = false;
-
-// 获取请求路径
 const { slug } = Astro.params;
-const path = '/' + (slug || '');
+const aposData = await useApostropheData({
+  req: Astro.request,
+  slug: slug || 'index'
+});
 
-// 从ApostropheCMS获取数据
-const aposData = await getAposData(path, Astro.locals);
-const { page, piece } = aposData;
-
-// 如果页面不存在，返回404
-if (!page) {
-  return Astro.redirect('/404');
-}
-
-// 根据页面类型确定模板
-const templateType = piece 
-  ? page.type + ':show' 
-  : page.type;
-const Template = templates[templateType];
-
-// 如果找不到对应模板，使用默认页面
-if (!Template) {
-  return Astro.redirect('/404');
-}
+// 根据页面类型选择模板组件
+const Template = templateComponents[aposData.page.type];
 ---
 
-<Layout title={page.title}>
+<BaseLayout title={aposData.page.title}>
   <Template aposData={aposData} />
-</Layout>
+</BaseLayout>
 ```
 
-## 六、实现特定功能
+## 5. 页面组件开发
 
-### 1. 创建博客功能
-
-定义博客内容类型（在ApostropheCMS后端）：
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    label: '文章',
-    pluralLabel: '文章'
-  },
-  fields: {
-    add: {
-      authorName: {
-        type: 'string',
-        label: '作者名称'
-      },
-      publicationDate: {
-        type: 'date',
-        label: '发布日期'
-      },
-      content: {
-        type: 'area',
-        label: '内容',
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {},
-            '@apostrophecms/image': {},
-            'hero-widget': {}
-            // 其他可用组件...
-          }
-        }
-      }
-    },
-    group: {
-      basics: {
-        label: '基本信息',
-        fields: ['authorName', 'publicationDate', 'content']
-      }
-    }
-  }
-};
-```
-
-创建博客列表页模板：
+### 模板组件结构
 
 ```astro
-// frontend/src/templates/ArticleIndexPage.astro
 ---
-import dayjs from 'dayjs';
+// frontend/src/templates/AboutPage.astro
+import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
 
-const { page, pieces } = Astro.props.aposData;
+const { page } = Astro.props.aposData;
 ---
 
-<section class="article-list">
-  <h1>{page.title}</h1>
+<section class="about-page">
+  <h1 class="title">{page.title}</h1>
   
-  <div class="articles">
-    {pieces.map(article => (
-      <div class="article-card">
-        <h4>发布于 {dayjs(article.publicationDate).format('YYYY年MM月DD日')}</h4>
-        <h3>
-          <a href={article._url}>{article.title}</a>
-        </h3>
-        <p>作者：{article.authorName}</p>
-      </div>
-    ))}
+  <div class="main-content">
+    <AposArea area={page.main} />
   </div>
 </section>
 ```
 
-创建博客详情页模板：
+### 小部件组件开发
 
 ```astro
-// frontend/src/templates/ArticleShowPage.astro
 ---
-import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
-import dayjs from 'dayjs';
-
-const { piece } = Astro.props.aposData;
-const { content } = piece;
+// frontend/src/widgets/HeroWidget.astro
+const { widget } = Astro.props;
 ---
 
-<article class="article-detail">
-  <h1>{piece.title}</h1>
-  <div class="article-meta">
-    <p>作者：{piece.authorName}</p>
-    <p>发布于：{dayjs(piece.publicationDate).format('YYYY年MM月DD日')}</p>
+<div class="hero-section" style={widget.backgroundStyle}>
+  <div class="hero-content">
+    <h1 class="title">{widget.heading}</h1>
+    <p class="subtitle">{widget.subheading}</p>
+    
+    {widget.ctaEnabled && (
+      <a href={widget.ctaLink} class="button is-primary is-large">
+        {widget.ctaText}
+      </a>
+    )}
   </div>
+</div>
+
+<style>
+  .hero-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+  }
   
-  <div class="article-content">
-    <AposArea area={content} />
-  </div>
-</article>
+  /* 其他样式 */
+</style>
 ```
 
-### 2. 图片和媒体处理
+## 6. 多语言实现
 
-配置ApostropheCMS的图片尺寸预设：
+### 配置Astro i18n
 
 ```javascript
-// modules/@apostrophecms/attachment/index.js
-module.exports = {
-  options: {
-    // 定义上传时创建的尺寸
-    imageSizes: {
-      'custom-banner': { width: 1200, height: 400 },
-      'square-thumb': { width: 300, height: 300 },
-      'small': { width: 300 },
-      'medium': { width: 600 },
-      'large': { width: 900 }
-    }
+// astro.config.mjs
+i18n: {
+  defaultLocale: 'zh',
+  locales: ['zh', 'en'],
+  routing: {
+    prefixDefaultLocale: false
   }
-};
+}
 ```
 
-在Astro中使用图片辅助函数：
+### 翻译文件
 
-```javascript
-import {
-  getAttachmentUrl,
-  getAttachmentSrcset,
-  getFocalPoint
-} from '../lib/attachments.js';
-
-// 使用示例
-<img
-  src={getAttachmentUrl(image, { size: 'medium' })}
-  srcset={getAttachmentSrcset(image)}
-  sizes="(max-width: 800px) 100vw, 800px"
-  alt={image.alt || image.title || 'Image description'}
-  style={`object-position: ${getFocalPoint(image)};`}
-/>
-```
-
-## 七、部署与优化
-
-### 1. 部署选项
-
-#### A. Apostrophe官方托管
-
-- 自动处理数据库配置和管理
-- 资产存储和交付
-- SSL证书管理
-- 自动备份
-- 安全更新
-
-#### B. 自托管部署
-
-**后端环境变量配置**:
-```
-NODE_ENV=production
-APOS_MONGODB_URI=YOUR_mongodb_connection_string
-APOS_EXTERNAL_FRONT_KEY=a_random_string
-```
-
-**前端部署**(如Netlify):
-- 基础目录: `frontend`
-- 构建命令: `npm run build`
-- 发布目录: `frontend/dist`
-- 环境变量: `APOS_EXTERNAL_FRONT_KEY=与后端相同的字符串`
-
-在生产环境中，前端Astro项目需要设置`APOS_HOST`环境变量，指向ApostropheCMS部署的URL地址。
-
-### 2. 性能优化
-
-- **中文字体优化**:
-  - 使用字体子集化技术
-  - 实现字体文件的异步加载
-  - 使用系统字体作为备选
-
-- **图片优化**:
-  - 使用适当的图片格式(WebP等)
-  - 实现懒加载
-  - 使用响应式图片
-
-- **缓存策略**:
-  - 配置合理的缓存策略
-  - 使用CDN分发静态资源
-
-## 八、测试与调试
-
-### 1. 开发环境
-
-在本地开发环境中运行项目：
-
-```bash
-# 设置环境变量
-export APOS_EXTERNAL_FRONT_KEY=hansen-website-key
-
-# 启动后端
-cd backend
-npm run dev
-
-# 启动前端(新终端)
-cd frontend
-npm run dev
-```
-
-### 2. 调试技巧
-
-- 使用`apos.util.log()`进行后端日志输出
-- 利用ApostropheCMS内置的分析工具查看性能
-- 使用Astro开发服务器的热重载功能加快开发
-- 检查ApostropheCMS的admin界面登录状态（通常在`/login`路径）
-
-## 九、扩展与定制
-
-### 1. 自定义管理界面
-
-可通过扩展`@apostrophecms/ui`模块定制管理界面：
-
-```javascript
-// modules/@apostrophecms/ui/index.js
-module.exports = {
-  options: {
-    themeStyles: {
-      primary: '#E03A3E', // 开拓者红
-      // 其他样式...
-    }
+```json
+// frontend/public/locales/zh/translation.json
+{
+  "nav": {
+    "home": "首页",
+    "about": "关于杨瀚森",
+    "career": "职业生涯"
   }
-};
-```
+}
 
-### 2. 添加自定义API端点
-
-为特定功能（如数据统计API）添加自定义REST端点：
-
-```javascript
-// modules/career-stats-piece/index.js
-module.exports = {
-  // ...
-  apiRoutes(self) {
-    return {
-      get: {
-        // GET /api/v1/career-stats-piece/aggregate
-        aggregate: async (req) => {
-          // 实现聚合统计逻辑
-          return { /* 统计结果 */ };
-        }
-      }
-    };
+// frontend/public/locales/en/translation.json
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Hansen Yang",
+    "career": "Career"
   }
-};
+}
 ```
 
-## 十、参考资源
+### 语言切换组件
 
-- [ApostropheCMS官方文档](https://docs.apostrophecms.org/)
-- [Astro官方文档](https://docs.astro.build/)
-- [ApostropheCMS与Astro集成指南](https://docs.astro.build/en/guides/cms/apostrophecms/)
-- [apostrophe-astro扩展文档](https://github.com/apostrophecms/apostrophe-astro)
-- [Astro集成ApostropheCMS示例项目](https://github.com/apostrophecms/apostrophe-astro)
-- [Bulma CSS文档](https://bulma.io/documentation/)
-
-### 额外社区资源
-
-- [Integrating ApostropheCMS with Astro, Pt. 1](https://apostrophecms.com/blog/integrating-apostrophecms-with-astro-part-1) by Antonello Zaini
-- [Integrating ApostropheCMS with Astro, Pt. 2](https://apostrophecms.com/blog/integrating-apostrophecms-with-astro-part-2) by Antonello Zaini
-
+```astro
+---
+// frontend/src/components/LanguageSwitcher.astro
+const { pathname } = Astro.url;
+const currentLang = Astro.currentLocale || 'zh';
 ---
 
-本指南将随项目进展不断更新，为开发团队提供技术参考和最佳实践。 
+<div class="language-switcher">
+  <a href={`/en${pathname}`} class={currentLang === 'en' ? 'active' : ''}>English</a>
+  <span class="separator">|</span>
+  <a href={pathname.replace('/en', '')} class={currentLang === 'zh' ? 'active' : ''}>中文</a>
+</div>
+```
+
+## 7. 常见问题与解决方案
+
+### API通信问题
+
+**问题**: `createApi is not a function`错误
+**解决方案**: 重写API客户端代码，使用原生fetch代替有问题的createApi方法
+
+```javascript
+// frontend/src/lib/aposClient.js
+export async function fetchData(url, options = {}) {
+  try {
+    const response = await fetch(`${import.meta.env.APOS_HOST || 'http://localhost:3000'}${url}`, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Accept': 'application/json',
+        'X-APOS-EXTERNAL-FRONT-KEY': process.env.APOS_EXTERNAL_FRONT_KEY
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API错误 ${response.status}: ${response.statusText}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('API请求失败:', error);
+    throw error;
+  }
+}
+```
+
+### Widget配置问题
+
+**问题**: ApostropheCMS中的widget配置包含多余的"-widget"后缀
+**解决方案**: 确保widget名称在定义和引用时保持一致
+
+### SASS编译错误
+
+**问题**: SASS导入路径问题
+**解决方案**: 确保正确配置Bulma样式表导入路径
+
+```scss
+// 正确的导入方式
+@use 'bulma/sass/utilities/initial-variables' as * with (
+  $primary: #E03A3E,
+  // 其他变量...
+);
+```
+
+### URL和站点配置问题
+
+**问题**: Invalid URL错误和Astro.site配置问题
+**解决方案**: 正确配置site属性并为Astro.site提供默认值
+
+```javascript
+// astro.config.mjs
+export default defineConfig({
+  site: 'https://hansenyang.com',
+  // 其他配置...
+});
+```
+
+## 8. 部署流程
+
+1. **构建前端项目**:
+   ```bash
+   cd frontend
+   npm run build
+   ```
+
+2. **构建后端项目**:
+   ```bash
+   cd backend
+   npm run build
+   ```
+
+3. **配置生产环境变量**:
+   - 确保设置正确的数据库连接
+   - 配置适当的域名和URL
+   - 设置生产环境的安全密钥
+
+4. **部署后端ApostropheCMS**:
+   - 部署到支持Node.js的服务器
+   - 配置MongoDB生产环境
+   - 设置环境变量
+   - 配置反向代理(Nginx/Apache)
+
+5. **部署前端Astro**:
+   - 使用适合的适配器(如node)
+   - 配置正确的APOS_HOST环境变量指向部署的CMS
+   - 部署静态资源到CDN
+
+## 9. 最佳实践
+
+1. **内容模型设计**:
+   - 保持字段命名一致性
+   - 使用组件化思想设计widget
+   - 合理设置必填字段和默认值
+
+2. **前端开发**:
+   - 组件复用最大化
+   - 响应式设计覆盖所有设备
+   - 懒加载非首屏内容提升性能
+
+3. **多语言维护**:
+   - 翻译文件结构统一
+   - 避免硬编码文本
+   - 为缺失翻译提供合理的回退策略
+
+4. **性能优化**:
+   - 图片使用合适的格式和尺寸
+   - 实现高效的缓存策略
+   - 使用Astro的部分水合优化交互体验 
+
+## 十二、项目状态更新 (2024-06-xx)
+
+尽管基础框架开发已完成，目前网站仍处于"建设中"状态，存在以下需要解决的问题：
+
+### 1. 内容展示问题
+- [ ] 修复翻译文件加载问题，替换占位符文本
+- [ ] 确保CMS内容正确显示在前端页面
+- [ ] 完成首页内容填充和排版
+
+### 2. 功能完善
+- [ ] 验证并修复API数据获取问题
+- [ ] 确保多语言内容正确切换
+- [ ] 完成各页面实际内容的展示逻辑
+
+### 3. 上线准备
+- [ ] 进行最终的内容审核与完善
+- [ ] 进行全面的跨浏览器兼容性测试
+- [ ] 配置生产环境的性能监控 

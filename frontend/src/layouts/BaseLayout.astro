@@ -23,10 +23,13 @@ const pageDescription = description || siteDescription;
 const defaultMetaImage = '/images/hansen-yang-meta.jpg';
 const metaImageUrl = metaImage || defaultMetaImage;
 
+// 设置默认站点URL
+const siteUrl = Astro.site || new URL('http://localhost:4321');
+
 // 为不同语言生成规范链接
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const zhURL = new URL(Astro.url.pathname.replace(/^\/en/, ''), Astro.site);
-const enURL = new URL(`/en${Astro.url.pathname.replace(/^\/en/, '')}`, Astro.site);
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+const zhURL = new URL(Astro.url.pathname.replace(/^\/en/, ''), siteUrl);
+const enURL = new URL(`/en${Astro.url.pathname.replace(/^\/en/, '')}`, siteUrl);
 ---
 
 <!DOCTYPE html>

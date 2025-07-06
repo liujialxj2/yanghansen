@@ -1,8 +1,8 @@
-import { getWidgetGroups } from '../../../lib/helpers/area-widgets.js';
-import heroFields from '../../../lib/schema-mixins/hero-fields.js';
-import slideshowFields from '../../../lib/schema-mixins/slideshow-fields.js';
+const { getWidgetGroups } = require('../../../lib/helpers/area-widgets.js');
+const heroFields = require('../../../lib/schema-mixins/hero-fields.js');
+const slideshowFields = require('../../../lib/schema-mixins/slideshow-fields.js');
 
-export default {
+module.exports = {
   options: {
     label: 'Home Page'
   },

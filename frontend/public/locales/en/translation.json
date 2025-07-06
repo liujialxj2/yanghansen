@@ -1,14 +1,56 @@
 {
   "site": {
     "title": "Hansen Yang Official Website",
-    "description": "Official website of basketball player Hansen Yang"
+    "description": "Official website of Hansen Yang, NBA Portland Trail Blazers player"
   },
   "nav": {
     "home": "Home",
     "about": "About",
-    "career": "Career",
+    "stats": "Stats",
     "news": "News",
-    "videos": "Videos",
-    "fanzone": "Fan Zone"
+    "gallery": "Gallery",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": {
+      "title": "Hansen Yang",
+      "subtitle": "Portland Trail Blazers | Forward",
+      "cta": "Learn More"
+    },
+    "latest": {
+      "title": "Latest Updates",
+      "viewAll": "View All"
+    },
+    "stats": {
+      "title": "Season Stats",
+      "ppg": "PPG",
+      "rpg": "RPG",
+      "apg": "APG",
+      "viewFull": "View Full Stats"
+    }
+  },
+  "about": {
+    "title": "About Hansen",
+    "bio": {
+      "title": "Biography",
+      "content": "Hansen Yang is a professional basketball player for the Portland Trail Blazers. He is known for his excellent shooting ability and defensive awareness."
+    },
+    "timeline": {
+      "title": "Career Timeline",
+      "viewMore": "View More"
+    }
+  },
+  "footer": {
+    "rights": "All Rights Reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "contact": "Contact Us"
+  },
+  "common": {
+    "readMore": "Read More",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "back": "Back"
   }
 } 

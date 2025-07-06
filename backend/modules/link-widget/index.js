@@ -1,5 +1,5 @@
-import linkFields from '../../lib/schema-mixins/link-fields.js';
-export default {
+const linkFields = require('../../lib/schema-mixins/link-fields.js');
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Link',

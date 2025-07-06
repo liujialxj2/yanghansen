@@ -1,6 +1,6 @@
-import colorOptionsHelper from '../../lib/helpers/color-options.js';
+const colorOptionsHelper = require('../../lib/helpers/color-options.js');
 
-export default {
+module.exports = {
   slideDuration: {
     type: 'integer',
     label: 'Slide Duration (ms)',

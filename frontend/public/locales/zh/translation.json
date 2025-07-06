@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "杨瀚森官方网站",
-    "description": "杨瀚森篮球运动员的官方网站"
+    "description": "NBA开拓者队球员杨瀚森的官方网站"
   },
   "nav": {
     "home": "首页",
@@ -9,6 +9,55 @@
     "career": "职业生涯",
     "news": "新闻",
     "videos": "视频",
-    "fanzone": "粉丝专区"
+    "fanZone": "粉丝社区",
+    "stats": "数据",
+    "gallery": "图库",
+    "contact": "联系"
+  },
+  "home": {
+    "hero": {
+      "title": "杨瀚森",
+      "subtitle": "波特兰开拓者 | 前锋",
+      "cta": "了解更多"
+    },
+    "latest": {
+      "title": "最新动态",
+      "viewAll": "查看全部"
+    },
+    "stats": {
+      "title": "赛季数据",
+      "ppg": "场均得分",
+      "rpg": "场均篮板",
+      "apg": "场均助攻",
+      "viewFull": "查看完整数据"
+    }
+  },
+  "about": {
+    "title": "关于杨瀚森",
+    "bio": {
+      "title": "个人简介",
+      "content": "杨瀚森，NBA波特兰开拓者队球员，司职前锋。他以出色的投篮能力和防守意识著称。"
+    },
+    "timeline": {
+      "title": "职业生涯",
+      "viewMore": "查看更多"
+    }
+  },
+  "footer": {
+    "rights": "版权所有",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "contact": "联系我们",
+    "description": "杨瀚森官方网站，提供最新的新闻、统计数据和粉丝互动",
+    "quickLinks": "快速链接",
+    "followMe": "关注我",
+    "copyright": "© 2025 杨瀚森 Hansen Yang. All Rights Reserved."
+  },
+  "common": {
+    "readMore": "阅读更多",
+    "loading": "加载中...",
+    "error": "出错了",
+    "retry": "重试",
+    "back": "返回"
   }
 } 

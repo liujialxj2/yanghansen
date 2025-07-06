@@ -1,0 +1,194 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatImageUrl } from '../lib/apos';
+import { t } from 'i18next';
+import { Trans } from 'astro-i18next/components';
+
+// 获取页面数据
+const { data } = Astro.props;
+const page = data?.page || {};
+const title = page.title || t('fanzone.title');
+const main = page.main || {};
+const gallery = page.gallery || {};
+---
+
+<BaseLayout title={title}>
+  <section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-1">{title}</h1>
+        <h2 class="subtitle">
+          <Trans i18nKey="fanzone.subtitle">
+            粉丝专区 | Fan Zone
+          </Trans>
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- 主要内容区域 -->
+      {main.items && main.items.length > 0 && (
+        <div class="content">
+          {main.items.map((widget) => (
+            <Astro.slots.render name={`main:${widget.type}`} widget={widget} />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+  
+  <!-- 粉丝活动区域 -->
+  <section class="section has-background-light">
+    <div class="container">
+      <h2 class="title is-2 has-text-centered mb-6">
+        <Trans i18nKey="fanzone.events.title">
+          粉丝活动
+        </Trans>
+      </h2>
+      
+      <div class="columns is-multiline">
+        <div class="column is-4">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-3by2">
+                <img src="https://via.placeholder.com/600x400" alt="活动图片">
+              </figure>
+            </div>
+            <div class="card-content">
+              <p class="title is-5">线下见面会</p>
+              <p class="subtitle is-6">7月15日 · 上海</p>
+              <div class="content">
+                与杨瀚森一起参加粉丝见面会，获取签名并合影留念。
+              </div>
+            </div>
+            <footer class="card-footer">
+              <a href="#" class="card-footer-item">报名</a>
+              <a href="#" class="card-footer-item">详情</a>
+            </footer>
+          </div>
+        </div>
+        
+        <div class="column is-4">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-3by2">
+                <img src="https://via.placeholder.com/600x400" alt="活动图片">
+              </figure>
+            </div>
+            <div class="card-content">
+              <p class="title is-5">线上直播</p>
+              <p class="subtitle is-6">8月2日 · 19:30</p>
+              <div class="content">
+                杨瀚森将在线上与粉丝互动，分享NBA赛季经历。
+              </div>
+            </div>
+            <footer class="card-footer">
+              <a href="#" class="card-footer-item">提醒我</a>
+              <a href="#" class="card-footer-item">详情</a>
+            </footer>
+          </div>
+        </div>
+        
+        <div class="column is-4">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-3by2">
+                <img src="https://via.placeholder.com/600x400" alt="活动图片">
+              </figure>
+            </div>
+            <div class="card-content">
+              <p class="title is-5">篮球训练营</p>
+              <p class="subtitle is-6">8月15-20日 · 北京</p>
+              <div class="content">
+                由杨瀚森亲自指导的青少年篮球训练营。
+              </div>
+            </div>
+            <footer class="card-footer">
+              <a href="#" class="card-footer-item">报名</a>
+              <a href="#" class="card-footer-item">详情</a>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 粉丝照片墙 -->
+  <section class="section">
+    <div class="container">
+      <h2 class="title is-2 has-text-centered mb-6">
+        <Trans i18nKey="fanzone.gallery.title">
+          粉丝照片墙
+        </Trans>
+      </h2>
+      
+      {gallery.items && gallery.items.length > 0 && (
+        <div class="gallery-grid">
+          {gallery.items.map((widget) => (
+            <Astro.slots.render name={`gallery:${widget.type}`} widget={widget} />
+          ))}
+        </div>
+      )}
+      
+      {(!gallery.items || gallery.items.length === 0) && (
+        <div class="gallery-grid">
+          {Array(6).fill().map((_, i) => (
+            <div class="gallery-item">
+              <img src={`https://via.placeholder.com/400x400?text=Fan+Photo+${i+1}`} alt="粉丝照片" />
+            </div>
+          ))}
+        </div>
+      )}
+      
+      <div class="has-text-centered mt-5">
+        <a href="#" class="button is-primary is-medium">
+          <Trans i18nKey="fanzone.gallery.upload">
+            上传你的照片
+          </Trans>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+  
+  .card-content {
+    flex-grow: 1;
+  }
+  
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 1rem;
+  }
+  
+  .gallery-item {
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+</style> 

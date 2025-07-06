@@ -5,11 +5,46 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "启动开发环境",
+            "type": "shell",
+            "request": "launch",
+            "command": "${workspaceFolder}/start-dev.sh",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "preLaunchTask": "启动开发环境"
+        },
+        {
+            "name": "调试前端",
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}"
+            "url": "http://localhost:4321",
+            "webRoot": "${workspaceFolder}/frontend",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/src/*"
+            }
+        },
+        {
+            "name": "调试后端",
+            "type": "node",
+            "request": "attach",
+            "port": 9229,
+            "restart": true,
+            "address": "localhost",
+            "localRoot": "${workspaceFolder}/backend",
+            "remoteRoot": "${workspaceFolder}/backend",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "全栈调试",
+            "configurations": ["调试前端", "调试后端"],
+            "stopAll": true
         }
     ]
 }

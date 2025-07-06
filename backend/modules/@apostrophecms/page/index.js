@@ -1,7 +1,7 @@
 // This configures the @apostrophecms/page module to add a "home" page type to the
 // pages menu
 
-export default {
+module.exports = {
   options: {
     builders: {
       children: true,
@@ -20,6 +20,10 @@ export default {
       {
         name: 'article-page',
         label: 'Article Page'
+      },
+      {
+        name: 'about-page',
+        label: '关于页面 / About Page'
       },
       {
         name: '@apostrophecms/home-page',

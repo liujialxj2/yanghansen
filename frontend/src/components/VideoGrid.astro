@@ -1,0 +1,139 @@
+---
+import { t } from "i18next";
+import VideoCard from './VideoCard.astro';
+
+// 定义接口类型
+interface Props {
+  videos: any[];
+  title?: string;
+  showViewAll?: boolean;
+  viewAllLink?: string;
+  columns?: number;
+}
+
+// 获取视频列表数据
+const { 
+  videos = [], 
+  title, 
+  showViewAll = false,
+  viewAllLink = "/videos",
+  columns = 3
+} = Astro.props;
+
+// 准备测试数据
+const displayVideos = videos.length > 0 
+  ? videos 
+  : [
+    { 
+      _id: '1', 
+      title: '杨瀚森NBA首秀精彩集锦 | Hansen Yang NBA Debut Highlights',
+      _url: '/videos/nba-debut',
+      videoUrl: 'https://www.youtube.com/watch?v=XRpakobyQGw',
+      duration: '4:35',
+      recordDate: '2025-10-28',
+      category: 'highlights',
+      description: '杨瀚森在NBA首秀中展示了他独特的传球视野和篮下终结能力，全场贡献12分6篮板4助攻'
+    },
+    { 
+      _id: '2', 
+      title: '赛后采访：杨瀚森谈加盟开拓者的感受 | Post-Game Interview',
+      _url: '/videos/post-game-interview',
+      videoUrl: 'https://www.youtube.com/watch?v=noqGIyAQvNI',
+      duration: '5:12',
+      recordDate: '2025-06-28',
+      category: 'interviews',
+      description: '杨瀚森在被选中后表示："这是我人生中最重要的时刻之一，我非常感谢波特兰球队的信任。"'
+    },
+    { 
+      _id: '3', 
+      title: '训练日记：备战NBA赛季 | Training Camp Diary',
+      _url: '/videos/training-camp',
+      videoUrl: 'https://www.tiktok.com/@trailblazers/video/7520414337781992734',
+      duration: '3:24',
+      recordDate: '2025-09-15',
+      category: 'training',
+      description: '跟随镜头记录杨瀚森加入开拓者队后的季前训练营，展示他如何适应NBA强度的训练。'
+    },
+    { 
+      _id: '4', 
+      title: '杨瀚森NCAA选秀联合试训表现 | NBA Draft Combine',
+      _url: '/videos/draft-combine',
+      videoUrl: 'https://www.youtube.com/watch?v=oeKFV7vaZkE',
+      duration: '7:18',
+      recordDate: '2025-05-15',
+      category: 'highlights',
+      description: '杨瀚森在NBA选秀联合试训中展现的"华丽传球"甚至赢得了与三届MVP尼古拉·约基奇的比较。'
+    },
+    { 
+      _id: '5', 
+      title: '幕后花絮：选秀之夜的紧张时刻 | Draft Night Behind the Scenes',
+      _url: '/videos/draft-night',
+      videoUrl: 'https://www.tiktok.com/@behindtheplay_yt/video/7520122060711005454',
+      duration: '6:45',
+      recordDate: '2025-06-26',
+      category: 'behindScenes',
+      description: '专访杨瀚森团队，回顾选秀之夜的紧张等待过程和被选中时的激动瞬间。'
+    },
+    { 
+      _id: '6', 
+      title: '杨瀚森 CBA 生涯最佳表现集锦 | CBA Career Highlights',
+      _url: '/videos/cba-highlights',
+      videoUrl: 'https://www.youtube.com/watch?v=XRpakobyQGw',
+      duration: '8:27',
+      recordDate: '2025-04-20',
+      category: 'highlights',
+      description: '回顾杨瀚森在CBA两个赛季的精彩表现，展示他是如何从青岛国信雄鹰队脱颖而出的。'
+    }
+  ];
+---
+
+<div class="video-grid">
+  {title && (
+    <div class="section-header">
+      <h2 class="title is-3">{title}</h2>
+      {showViewAll && (
+        <a href={viewAllLink} class="view-all">
+          {t("common.viewMore")}
+          <span class="icon"><i class="fas fa-arrow-right"></i></span>
+        </a>
+      )}
+    </div>
+  )}
+  
+  <div class="columns is-multiline">
+    {displayVideos.map(video => (
+      <div class={`column is-${12/columns}`}>
+        <VideoCard video={video} />
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .video-grid {
+    margin: 2rem 0;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .view-all {
+    display: flex;
+    align-items: center;
+    color: #E03A3E;
+    font-weight: 500;
+  }
+  
+  .view-all .icon {
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .view-all:hover .icon {
+    transform: translateX(3px);
+  }
+</style> 

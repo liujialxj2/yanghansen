@@ -18,9 +18,20 @@ import {
   getFocalPoint,
   getWidth,
   getHeight,
-} from "@apostrophecms/apostrophe-astro/lib/attachment.js";
-import { slugify } from "@apostrophecms/apostrophe-astro/lib/util.js";
+} from "../lib/attachments.js";
 import Figure from "../components/Figure.astro";
+
+// 简单的slugify函数，替代ApostropheCMS的实现
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
 
 const { widget, imageOptions } = Astro.props;
 const placeholder = widget?.aposPlaceholder;

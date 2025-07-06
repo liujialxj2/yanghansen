@@ -1,0 +1,306 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatImageUrl } from '../lib/apos';
+import { t } from 'i18next';
+import dayjs from 'dayjs';
+
+// 获取页面数据
+const { data } = Astro.props;
+const article = data?.piece || {};
+const title = article.title || t('news.article');
+const relatedArticles = data?.related || [];
+
+// 准备封面图
+const heroImageUrl = article._heroImage ? formatImageUrl(article._heroImage) : null;
+const publishDate = article.publishDate ? dayjs(article.publishDate).format('YYYY.MM.DD') : null;
+
+// 获取文章类别的本地化名称
+const getCategoryLabel = (category) => {
+  const categoryMap = {
+    'news': t('news.categories.team'),
+    'opinion': t('news.categories.personal'),
+    'feature': t('news.categories.interviews'),
+    'review': t('news.categories.media')
+  };
+  return categoryMap[category] || category;
+};
+---
+
+<BaseLayout title={title}>
+  <div class="article-detail-page">
+    <section class="hero is-medium is-dark">
+      <div class="hero-body">
+        <div class="container">
+          <div class="article-meta">
+            {article.category && (
+              <span class="article-category">{getCategoryLabel(article.category)}</span>
+            )}
+            {publishDate && (
+              <span class="article-date">{publishDate}</span>
+            )}
+          </div>
+          <h1 class="title is-1">{title}</h1>
+          
+          {article._author && (
+            <div class="article-author">
+              <span class="author-prefix">{t('article.by')}</span>
+              <span class="author-name">{article._author.title}</span>
+            </div>
+          )}
+        </div>
+      </div>
+      {heroImageUrl && (
+        <div class="hero-image" style={`background-image: url('${heroImageUrl}')`}></div>
+      )}
+    </section>
+    
+    <section class="section article-content">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-8 is-offset-2">
+            {article.excerpt && (
+              <div class="article-excerpt content">
+                <p>{article.excerpt}</p>
+              </div>
+            )}
+            
+            {article.mainContent && article.mainContent.items && (
+              <div class="article-body content">
+                {article.mainContent.items.map((widget) => (
+                  <Astro.slots.render name={`main:${widget.type}`} widget={widget} />
+                ))}
+              </div>
+            )}
+            
+            <div class="article-share">
+              <span class="share-label">{t('news.shareThis')}:</span>
+              <div class="social-buttons">
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url}`} target="_blank" class="social-button">
+                  <span class="icon"><i class="fab fa-facebook-f"></i></span>
+                </a>
+                <a href={`https://twitter.com/intent/tweet?url=${Astro.url}&text=${encodeURIComponent(title)}`} target="_blank" class="social-button">
+                  <span class="icon"><i class="fab fa-twitter"></i></span>
+                </a>
+                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${Astro.url}`} target="_blank" class="social-button">
+                  <span class="icon"><i class="fab fa-linkedin-in"></i></span>
+                </a>
+                <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + Astro.url)}`} target="_blank" class="social-button">
+                  <span class="icon"><i class="fab fa-whatsapp"></i></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    {relatedArticles && relatedArticles.length > 0 && (
+      <section class="section related-articles-section">
+        <div class="container">
+          <h2 class="title is-3">{t('news.relatedNews')}</h2>
+          <div class="columns is-multiline">
+            {relatedArticles.map(article => (
+              <div class="column is-4">
+                <div class="card">
+                  {article._heroImage && (
+                    <div class="card-image">
+                      <figure class="image is-16by9">
+                        <img src={formatImageUrl(article._heroImage)} alt={article.title}>
+                      </figure>
+                    </div>
+                  )}
+                  <div class="card-content">
+                    <h3 class="related-title">
+                      <a href={article._url}>{article.title}</a>
+                    </h3>
+                  </div>
+                  <div class="card-footer">
+                    <a href={article._url} class="card-footer-item">
+                      {t("news.readMore")}
+                      <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .article-detail-page {
+    padding-bottom: 3rem;
+  }
+  
+  .hero {
+    position: relative;
+  }
+  
+  .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: 0;
+  }
+  
+  .hero-body {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .article-meta {
+    margin-bottom: 1rem;
+  }
+  
+  .article-category {
+    background-color: #E03A3E;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-right: 1rem;
+  }
+  
+  .article-date {
+    color: #ccc;
+    font-size: 0.9rem;
+  }
+  
+  .article-author {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+  }
+  
+  .author-prefix {
+    color: #ccc;
+    margin-right: 0.5rem;
+  }
+  
+  .author-name {
+    color: white;
+    font-weight: 500;
+  }
+  
+  .article-excerpt {
+    font-size: 1.25rem;
+    color: #666;
+    border-left: 4px solid #E03A3E;
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+  }
+  
+  .article-body {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  
+  .article-share {
+    display: flex;
+    align-items: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .share-label {
+    margin-right: 1rem;
+    color: #888;
+  }
+  
+  .social-buttons {
+    display: flex;
+  }
+  
+  .social-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #333;
+    margin-right: 0.75rem;
+    transition: all 0.2s ease;
+  }
+  
+  .social-button:hover {
+    background-color: #E03A3E;
+    color: white;
+    transform: translateY(-3px);
+  }
+  
+  .related-articles-section {
+    background-color: #f9f9f9;
+  }
+  
+  .related-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  
+  .related-title a {
+    color: inherit;
+    transition: color 0.2s ease;
+  }
+  
+  .related-title a:hover {
+    color: #E03A3E;
+  }
+  
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  .card-content {
+    flex-grow: 1;
+  }
+  
+  .card-footer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-footer-item:hover {
+    background-color: rgba(224, 58, 62, 0.1);
+    color: #E03A3E;
+  }
+
+  /* 暗色模式调整 */
+  .is-dark-mode .article-excerpt {
+    color: #aaa;
+  }
+  
+  .is-dark-mode .article-share {
+    border-top-color: #333;
+  }
+  
+  .is-dark-mode .social-button {
+    background-color: #333;
+    color: #f5f5f5;
+  }
+  
+  .is-dark-mode .related-articles-section {
+    background-color: #222;
+  }
+</style> 

@@ -1,0 +1,271 @@
+---
+import { t } from "i18next";
+import { localizePath } from "astro-i18next";
+import { formatImageUrl } from '../lib/apos';
+
+interface Props {
+  videos: any[];
+}
+
+// 获取视频，如果没有数据则使用模拟数据
+const { videos = [] } = Astro.props;
+
+// 最多显示4个视频
+const displayVideos = videos.length > 0 
+  ? videos.slice(0, 4) 
+  : [
+    { 
+      _id: '1', 
+      title: '杨瀚森NBA首秀精彩集锦 | Hansen Yang NBA Debut Highlights',
+      _url: '/videos/nba-debut',
+      videoUrl: 'https://www.youtube.com/watch?v=XRpakobyQGw',
+      duration: '4:35',
+      _thumbnail: null
+    },
+    { 
+      _id: '2', 
+      title: '赛后采访：杨瀚森谈加盟开拓者的感受',
+      _url: '/videos/post-game-interview',
+      videoUrl: 'https://www.youtube.com/watch?v=noqGIyAQvNI',
+      duration: '5:12',
+      _thumbnail: null
+    },
+    { 
+      _id: '3', 
+      title: '训练日记：备战NBA赛季',
+      _url: '/videos/training-camp',
+      videoUrl: 'https://www.tiktok.com/@trailblazers/video/7520414337781992734',
+      duration: '3:24',
+      _thumbnail: null
+    },
+    { 
+      _id: '4', 
+      title: '杨瀚森NCAA选秀联合试训表现',
+      _url: '/videos/draft-combine',
+      videoUrl: 'https://www.youtube.com/watch?v=oeKFV7vaZkE',
+      duration: '7:18',
+      _thumbnail: null
+    }
+  ];
+
+// 准备封面图URL
+const getThumbnailUrl = (video) => {
+  if (video._thumbnail) {
+    return formatImageUrl(video._thumbnail);
+  }
+  // 从YouTube链接提取视频ID并生成缩略图URL
+  if (video.videoUrl && video.videoUrl.includes('youtube')) {
+    const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = video.videoUrl.match(youtubeRegex);
+    if (match && match[1]) {
+      return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
+    }
+  }
+  return 'https://via.placeholder.com/640x360';
+};
+---
+
+<div class="home-video-section">
+  <div class="section-header">
+    <h2 class="title is-3">{t("home.media.title")}</h2>
+    <a href={localizePath("/videos")} class="view-all">
+      {t("home.media.viewAll")}
+      <span class="icon"><i class="fas fa-arrow-right"></i></span>
+    </a>
+  </div>
+  
+  <div class="video-grid">
+    {displayVideos.map((video, index) => (
+      <div class={`video-item video-item-${index + 1}`}>
+        <a href={video._url} class="video-link">
+          <div class="video-thumbnail">
+            <img src={getThumbnailUrl(video)} alt={video.title} loading="lazy">
+            <div class="play-overlay">
+              <span class="icon is-large">
+                <i class="fas fa-play-circle"></i>
+              </span>
+            </div>
+            {video.duration && (
+              <div class="video-duration">{video.duration}</div>
+            )}
+          </div>
+          <div class="video-info">
+            <h3 class="video-title">{video.title}</h3>
+          </div>
+        </a>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .home-video-section {
+    margin: 4rem 0 2rem;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .view-all {
+    display: flex;
+    align-items: center;
+    color: #E03A3E;
+    font-weight: 500;
+  }
+  
+  .view-all .icon {
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .view-all:hover .icon {
+    transform: translateX(3px);
+  }
+  
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1rem;
+    height: 500px;
+  }
+  
+  .video-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .video-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 2;
+  }
+  
+  .video-item-1 {
+    grid-column: 1 / 6;
+    grid-row: 1 / 3;
+  }
+  
+  .video-item-2 {
+    grid-column: 6 / 9;
+    grid-row: 1 / 1;
+  }
+  
+  .video-item-3 {
+    grid-column: 6 / 9;
+    grid-row: 2 / 3;
+  }
+  
+  .video-item-4 {
+    display: none;
+  }
+  
+  .video-link {
+    display: block;
+    height: 100%;
+    color: inherit;
+  }
+  
+  .video-thumbnail {
+    position: relative;
+    height: 100%;
+  }
+  
+  .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.7));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .video-item:hover .play-overlay {
+    opacity: 1;
+  }
+  
+  .play-overlay .icon {
+    color: white;
+    font-size: 3rem;
+    opacity: 0.8;
+    transform: scale(0.8);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
+  .video-item:hover .play-overlay .icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .video-duration {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0,0,0,0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+  }
+  
+  .video-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+  }
+  
+  .video-title {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+  }
+  
+  /* 响应式调整 */
+  @media screen and (max-width: 768px) {
+    .video-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(3, 200px);
+      height: auto;
+    }
+    
+    .video-item-1,
+    .video-item-2,
+    .video-item-3 {
+      grid-column: 1;
+    }
+    
+    .video-item-1 {
+      grid-row: 1;
+    }
+    
+    .video-item-2 {
+      grid-row: 2;
+    }
+    
+    .video-item-3 {
+      grid-row: 3;
+    }
+  }
+</style>

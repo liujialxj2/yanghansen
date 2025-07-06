@@ -1,0 +1,84 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getAposData, getGlobalSettings } from '../lib/apos-api.js';
+import i18next, { t } from 'i18next';
+import '../lib/i18n-init.js';
+
+// 尝试测试API连接
+let apiStatus = '测试中...';
+let globalData = null;
+let errorMessage = null;
+
+try {
+  // 使用新的API调用方法
+  globalData = await getGlobalSettings();
+  apiStatus = '连接成功';
+} catch (error) {
+  apiStatus = '连接失败';
+  errorMessage = error.message;
+}
+
+// 获取当前语言
+const currentLocale = i18next.language || 'zh';
+---
+
+<MainLayout title="API测试页面" page={{}}>
+  <div class="container py-6">
+    <h1 class="title">API测试页面</h1>
+    
+    <div class="box">
+      <h2 class="subtitle">1. API连接状态</h2>
+      <div class={`notification ${apiStatus === '连接成功' ? 'is-success' : 'is-danger'}`}>
+        <p><strong>状态:</strong> {apiStatus}</p>
+        {errorMessage && <p><strong>错误信息:</strong> {errorMessage}</p>}
+      </div>
+      
+      <pre style="background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow: auto;">
+        {JSON.stringify(globalData, null, 2)}
+      </pre>
+    </div>
+    
+    <div class="box mt-5">
+      <h2 class="subtitle">2. 翻译功能测试</h2>
+      <div class="columns">
+        <div class="column">
+          <h3 class="is-size-5 mb-3">当前语言: {currentLocale}</h3>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>键</th>
+                <th>翻译值</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>nav.home</td>
+                <td>{t('nav.home')}</td>
+              </tr>
+              <tr>
+                <td>nav.about</td>
+                <td>{t('nav.about')}</td>
+              </tr>
+              <tr>
+                <td>nav.career</td>
+                <td>{t('nav.career')}</td>
+              </tr>
+              <tr>
+                <td>footer.description</td>
+                <td>{t('footer.description')}</td>
+              </tr>
+              <tr>
+                <td>footer.quickLinks</td>
+                <td>{t('footer.quickLinks')}</td>
+              </tr>
+              <tr>
+                <td>footer.followMe</td>
+                <td>{t('footer.followMe')}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout> 

@@ -1,0 +1,513 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatImageUrl } from '../lib/apos';
+import { t } from 'i18next';
+import dayjs from 'dayjs';
+
+// 获取页面数据
+const { data } = Astro.props;
+const page = data?.page || {};
+const title = page.title || t('news.title');
+const main = page.main || {};
+const articles = data?.articles || [];
+
+// 测试数据
+const testArticles = articles.length > 0 
+  ? articles
+  : [
+    { 
+      _id: '1', 
+      title: '杨瀚森NBA首秀：展现全面技能，教练盛赞其"了不起的潜力"',
+      _url: '/articles/nba-debut',
+      publishDate: '2025-10-28',
+      category: 'news',
+      excerpt: '杨瀚森在NBA常规赛首秀中表现出色，全场贡献12分8篮板6助攻，引发外界关注。',
+      _heroImage: null,
+      _author: { title: '王明' }
+    },
+    { 
+      _id: '2', 
+      title: '专访：杨瀚森谈NBA生涯目标与适应挑战',
+      _url: '/articles/interview-goals',
+      publishDate: '2025-09-15',
+      category: 'feature',
+      excerpt: '在这次独家专访中，杨瀚森分享了他加入NBA后的短期和长期目标，以及他如何应对文化和比赛风格的巨大变化。',
+      _heroImage: null,
+      _author: { title: '李强' }
+    },
+    { 
+      _id: '3', 
+      title: '球探报告：杨瀚森的进攻技术细节分析',
+      _url: '/articles/scouting-analysis',
+      publishDate: '2025-08-20',
+      category: 'review',
+      excerpt: '资深球探对杨瀚森的低位技术、传球视野和篮下终结能力进行了深入分析，揭示了他独特的打法和未来潜力。',
+      _heroImage: null,
+      _author: { title: '詹姆斯·威尔逊' }
+    },
+    { 
+      _id: '4', 
+      title: '开拓者主帅：杨瀚森将是球队未来重要拼图',
+      _url: '/articles/coach-comments',
+      publishDate: '2025-07-15',
+      category: 'news',
+      excerpt: '波特兰主教练昌西·比卢普斯在新闻发布会上表示，杨瀚森的独特技能组合使他成为球队长期计划中不可或缺的一部分。',
+      _heroImage: null,
+      _author: { title: '体育中心' }
+    },
+    { 
+      _id: '5', 
+      title: '杨瀚森选秀日特辑：从CBA到NBA的篮球梦',
+      _url: '/articles/draft-day-special',
+      publishDate: '2025-06-28',
+      category: 'feature',
+      excerpt: '详细回顾了杨瀚森的篮球之路，从山东淄博的青少年时期到青岛国信青年队，再到CBA，最终实现NBA梦想的全过程。',
+      _heroImage: null,
+      _author: { title: '张伟' }
+    },
+    { 
+      _id: '6', 
+      title: '专栏：杨瀚森为何能在NBA立足',
+      _url: '/articles/column-nba-fit',
+      publishDate: '2025-06-01',
+      category: 'opinion',
+      excerpt: '资深篮球评论员分析了杨瀚森的比赛风格如何适应当今NBA的发展趋势，以及他能为球队带来哪些价值。',
+      _heroImage: null,
+      _author: { title: '陈晓明' }
+    }
+  ];
+
+// 准备封面图URL
+const getHeroImageUrl = (article) => {
+  if (article._heroImage) {
+    return formatImageUrl(article._heroImage);
+  }
+  return 'https://via.placeholder.com/1200x675';
+};
+
+// 获取文章类别的本地化名称
+const getCategoryLabel = (category) => {
+  const categoryMap = {
+    'news': t('news.categories.team'),
+    'opinion': t('news.categories.personal'),
+    'feature': t('news.categories.interviews'),
+    'review': t('news.categories.media')
+  };
+  return categoryMap[category] || category;
+};
+---
+
+<BaseLayout title={title}>
+  <section class="hero is-medium is-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-1">{title}</h1>
+        <h2 class="subtitle">{t('news.latest')}</h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- 文章分类过滤器 -->
+      <div class="article-filters">
+        <div class="tabs">
+          <ul>
+            <li class="is-active"><a href="#all">{t("news.categories.all")}</a></li>
+            <li><a href="#team">{t("news.categories.team")}</a></li>
+            <li><a href="#personal">{t("news.categories.personal")}</a></li>
+            <li><a href="#interviews">{t("news.categories.interviews")}</a></li>
+            <li><a href="#media">{t("news.categories.media")}</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 精选文章 -->
+      <div class="featured-article">
+        {testArticles.length > 0 && (
+          <div class="columns">
+            <div class="column is-8">
+              <a href={testArticles[0]._url} class="featured-link">
+                <div class="featured-image">
+                  <img src={getHeroImageUrl(testArticles[0])} alt={testArticles[0].title}>
+                  <div class="featured-overlay">
+                    <div class="featured-meta">
+                      <span class="featured-category">{getCategoryLabel(testArticles[0].category)}</span>
+                      <span class="featured-date">{dayjs(testArticles[0].publishDate).format('YYYY.MM.DD')}</span>
+                    </div>
+                    <h2 class="featured-title">{testArticles[0].title}</h2>
+                    <p class="featured-excerpt">{testArticles[0].excerpt}</p>
+                    <div class="featured-author">
+                      <span class="author-prefix">{t('article.by')}</span>
+                      <span class="author-name">{testArticles[0]._author?.title || t('article.staff')}</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="column is-4">
+              <div class="sub-featured">
+                {testArticles.length > 1 && (
+                  <a href={testArticles[1]._url} class="sub-featured-link">
+                    <div class="sub-featured-image">
+                      <img src={getHeroImageUrl(testArticles[1])} alt={testArticles[1].title}>
+                      <div class="sub-featured-overlay">
+                        <span class="sub-featured-category">{getCategoryLabel(testArticles[1].category)}</span>
+                        <h3 class="sub-featured-title">{testArticles[1].title}</h3>
+                        <div class="sub-featured-meta">
+                          <span class="sub-featured-date">{dayjs(testArticles[1].publishDate).format('YYYY.MM.DD')}</span>
+                          <span class="sub-featured-author">{testArticles[1]._author?.title || t('article.staff')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                )}
+                
+                {testArticles.length > 2 && (
+                  <a href={testArticles[2]._url} class="sub-featured-link">
+                    <div class="sub-featured-image">
+                      <img src={getHeroImageUrl(testArticles[2])} alt={testArticles[2].title}>
+                      <div class="sub-featured-overlay">
+                        <span class="sub-featured-category">{getCategoryLabel(testArticles[2].category)}</span>
+                        <h3 class="sub-featured-title">{testArticles[2].title}</h3>
+                        <div class="sub-featured-meta">
+                          <span class="sub-featured-date">{dayjs(testArticles[2].publishDate).format('YYYY.MM.DD')}</span>
+                          <span class="sub-featured-author">{testArticles[2]._author?.title || t('article.staff')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <!-- 所有文章列表 -->
+      <div class="all-articles">
+        <h2 class="title is-3">{t('news.latest')}</h2>
+        <div class="columns is-multiline">
+          {testArticles.slice(3).map(article => (
+            <div class="column is-4">
+              <div class="card article-card">
+                <div class="card-image">
+                  <a href={article._url}>
+                    <figure class="image is-16by9">
+                      <img src={getHeroImageUrl(article)} alt={article.title}>
+                    </figure>
+                  </a>
+                </div>
+                <div class="card-content">
+                  <div class="article-meta">
+                    <span class="article-category">{getCategoryLabel(article.category)}</span>
+                    <span class="article-date">{dayjs(article.publishDate).format('YYYY.MM.DD')}</span>
+                  </div>
+                  <h3 class="article-title">
+                    <a href={article._url}>{article.title}</a>
+                  </h3>
+                  {article.excerpt && (
+                    <p class="article-excerpt">{article.excerpt}</p>
+                  )}
+                  <div class="article-author">
+                    <span class="author-prefix">{t('article.by')}</span>
+                    <span class="author-name">{article._author?.title || t('article.staff')}</span>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <a href={article._url} class="card-footer-item">
+                    {t("news.readMore")}
+                    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <!-- 分页 -->
+      <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <a class="pagination-previous" title="This is the first page" disabled>{t('common.previous')}</a>
+        <a class="pagination-next">{t('common.next')}</a>
+        <ul class="pagination-list">
+          <li><a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a></li>
+          <li><a class="pagination-link" aria-label="Goto page 2">2</a></li>
+          <li><a class="pagination-link" aria-label="Goto page 3">3</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background-color: #1a1a1a;
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/news-header-bg.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .article-filters {
+    margin-bottom: 2rem;
+  }
+  
+  .tabs ul {
+    border-bottom-color: #E03A3E;
+  }
+  
+  .tabs li.is-active a {
+    border-bottom-color: #E03A3E;
+    color: #E03A3E;
+  }
+  
+  .tabs a {
+    transition: color 0.2s ease;
+  }
+  
+  .tabs a:hover {
+    color: #E03A3E;
+  }
+  
+  .featured-article {
+    margin-bottom: 3rem;
+  }
+  
+  .featured-link {
+    display: block;
+    height: 100%;
+    color: inherit;
+  }
+  
+  .featured-image {
+    position: relative;
+    height: 500px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .featured-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .featured-link:hover img {
+    transform: scale(1.05);
+  }
+  
+  .featured-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+  }
+  
+  .featured-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .featured-category {
+    background-color: #E03A3E;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .featured-date {
+    color: #ccc;
+    font-size: 0.9rem;
+  }
+  
+  .featured-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  
+  .featured-excerpt {
+    color: #ccc;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .featured-author {
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  
+  .author-prefix {
+    margin-right: 0.5rem;
+  }
+  
+  .author-name {
+    color: white;
+    font-weight: 500;
+  }
+  
+  .sub-featured {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+  }
+  
+  .sub-featured-link {
+    flex: 1;
+    display: block;
+    color: inherit;
+  }
+  
+  .sub-featured-image {
+    position: relative;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .sub-featured-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .sub-featured-link:hover img {
+    transform: scale(1.05);
+  }
+  
+  .sub-featured-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+  }
+  
+  .sub-featured-category {
+    display: inline-block;
+    background-color: #E03A3E;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+  
+  .sub-featured-title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  .sub-featured-meta {
+    display: flex;
+    justify-content: space-between;
+    color: #ccc;
+    font-size: 0.8rem;
+  }
+  
+  .all-articles {
+    margin-bottom: 2rem;
+  }
+  
+  .article-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+  
+  .card-image {
+    position: relative;
+  }
+  
+  .article-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .article-category {
+    color: #E03A3E;
+    font-weight: 500;
+  }
+  
+  .article-date {
+    color: #888;
+  }
+  
+  .article-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  .article-title a {
+    color: inherit;
+    transition: color 0.2s ease;
+  }
+  
+  .article-title a:hover {
+    color: #E03A3E;
+  }
+  
+  .article-excerpt {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .article-author {
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: auto;
+  }
+  
+  .card-content {
+    flex-grow: 1;
+  }
+  
+  .card-footer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-footer-item:hover {
+    background-color: rgba(224, 58, 62, 0.1);
+    color: #E03A3E;
+  }
+  
+  .pagination-link.is-current {
+    background-color: #E03A3E;
+    border-color: #E03A3E;
+  }
+</style> 

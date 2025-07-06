@@ -1,0 +1,219 @@
+@charset "utf-8";
+
+/// BULMA CUSTOMIZATION
+// There are three ways to use/customize Bulma:
+
+// METHOD 1: Use standard Bulma, but add back dark mode without customization
+//@use 'bulma/sass';
+
+// METHOD 2: Customize using bulma-no-dark-mode
+// 使用自定义的Bulma变量
+@use 'bulma/versions/bulma-no-dark-mode' with (
+  // 颜色设置
+  $primary: #E03A3E,  // 开拓者红
+  $dark: #101010,     // 深邃黑
+  $grey-light: #888888,  // 高级灰
+  $background: #1A1A1A,  // 淡灰色背景
+  $text: #FFFFFF,     // 文本白色
+  
+  // 字体设置
+  $family-primary: "Inter", "思源黑体", sans-serif,
+  $family-secondary: "Montserrat", "思源黑体", sans-serif,
+  
+  // 按钮样式
+  $button-color: #FFFFFF,
+  $button-hover-color: #FFFFFF
+);
+
+// HEADING STYLES
+// These extend Bulma's title classes to regular h1-h6 tags
+// You can customize individual heading styles here if needed
+h1 {
+  @extend .title;
+  @extend .is-1;
+  font-family: "Montserrat", "思源黑体", sans-serif;
+  color: #FFFFFF;
+}
+h2 {
+  @extend .title;
+  @extend .is-2;
+  font-family: "Montserrat", "思源黑体", sans-serif;
+  color: #FFFFFF;
+}
+h3 {
+  @extend .title;
+  @extend .is-3;
+  font-family: "Montserrat", "思源黑体", sans-serif;
+  color: #FFFFFF;
+}
+h4 {
+  @extend .title;
+  @extend .is-4;
+  font-family: "Montserrat", "思源黑体", sans-serif;
+  color: #FFFFFF;
+}
+h5 {
+  @extend .title;
+  @extend .is-5;
+  font-family: "Montserrat", "思源黑体", sans-serif;
+  color: #FFFFFF;
+}
+h6 {
+  @extend .title;
+  @extend .is-6;
+  font-family: "Montserrat", "思源黑体", sans-serif;
+  color: #FFFFFF;
+}
+
+// 自定义CSS变量
+:root {
+  --bulma-body-font-size: 1.2em;
+  --color-primary: #E03A3E; /* 开拓者红 */
+  --color-dark: #101010; /* 深邃黑 */
+  --color-white: #FFFFFF; /* 纯粹白 */
+  --color-gray: #888888; /* 高级灰 */
+  --color-bg-light: #1A1A1A; /* 淡灰色背景 */
+  
+  /* 字体设置 */
+  --font-heading: "Montserrat", "思源黑体", sans-serif;
+  --font-body: "Inter", "思源黑体", sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-dark);
+  color: var(--color-white);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(--color-white);
+}
+
+// Overrides for the Apostrophe Admin UI
+body {
+  & [data-apos-refreshable] .navbar.is-fixed-top {
+    top: 112px;
+  }
+
+  &[data-apos-generated].has-navbar-fixed-top .main-content {
+    padding-top: 118px;
+  }
+
+
+  &.has-navbar-fixed-top .apos-admin-bar-spacer {
+    height: 0 !important;
+  }
+
+  &:not(.has-navbar-fixed-top) .navbar {
+    margin-bottom: 0;
+  }
+}
+
+// 链接样式
+a {
+  color: var(--color-primary);
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #c0282d;
+}
+
+// 按钮样式
+.button.is-primary {
+  background-color: var(--color-primary);
+  border-color: transparent;
+}
+
+.button.is-primary:hover {
+  background-color: #c0282d;
+}
+
+.apos-area-widget-controls.apos-area-widget-controls--modify,
+.apos-area-widget-controls.apos-area-widget-controls {
+  z-index: 100 !important;
+}
+
+.apos-rich-text-editor__editor {
+  margin-left: 20px;
+}
+
+// helper for has-backround-transparent
+.has-background-transparent {
+  background-color: transparent;
+}
+
+body [data-apos-area] [data-apos-area] {
+  margin: 0 0 1.5rem 0;
+}
+
+.rich-text-widget {
+  *:not(:last-child) {
+    margin-bottom: 0.75rem
+  }
+}
+
+.rich-text-widget,
+.ProseMirror {
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
+  }
+  ul, ol {
+    margin-bottom: 1em;
+  }
+  ul ul, ol ul {
+    list-style-type: circle;
+    margin-left: 1em;
+  }
+  ol ol, ul ol {
+    list-style-type: lower-latin;
+    margin-left: 1em;
+  }
+}
+
+ol.apos-area-widget__breadcrumbs {
+  list-style-type: none !important;
+  padding-left: 0;
+  margin: 0;
+}
+
+/* Image Widget */
+.img-widget {
+  margin: 0;
+}
+.img-widget img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: var(--aspect-ratio, auto);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .column.is-half-mobile {
+    width: 50%;
+  }
+  
+  h1 {
+    font-size: 2rem !important;
+  }
+  
+  h2 {
+    font-size: 1.75rem !important;
+  }
+}

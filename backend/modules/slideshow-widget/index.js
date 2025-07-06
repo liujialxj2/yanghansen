@@ -1,6 +1,6 @@
-import slideshowFields from '../../lib/schema-mixins/slideshow-fields.js';
+const slideshowFields = require('../../lib/schema-mixins/slideshow-fields.js');
 
-export default {
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Slideshow',

@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatImageUrl } from '../lib/apos';
+import { t } from 'i18next';
+import { Trans } from 'astro-i18next/components';
+import VideoGrid from '../components/VideoGrid.astro';
+
+// 获取页面数据
+const { data } = Astro.props;
+const page = data?.page || {};
+const title = page.title || t('videos.title');
+const main = page.main || {};
+const videos = data?.videos || [];
+---
+
+<BaseLayout title={title}>
+  <section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-1">{title}</h1>
+        <h2 class="subtitle">
+          <Trans i18nKey="video.subtitle">
+            精彩视频 | Highlight Videos
+          </Trans>
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- 视频分类过滤器 -->
+      <div class="video-filters">
+        <div class="tabs">
+          <ul>
+            <li class="is-active"><a href="#all">{t("videos.categories.all")}</a></li>
+            <li><a href="#highlights">{t("videos.categories.highlights")}</a></li>
+            <li><a href="#interviews">{t("videos.categories.interviews")}</a></li>
+            <li><a href="#training">{t("videos.categories.training")}</a></li>
+            <li><a href="#behindScenes">{t("videos.categories.behindScenes")}</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 主要内容区域 -->
+      {main.items && main.items.length > 0 && (
+        <div class="content">
+          {main.items.map((widget) => (
+            <Astro.slots.render name={`main:${widget.type}`} widget={widget} />
+          ))}
+        </div>
+      )}
+      
+      <!-- 视频网格 -->
+      <VideoGrid 
+        videos={videos} 
+        title={t("videos.latest")} 
+        columns={3} 
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background-color: #1a1a1a;
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/video-header-bg.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .video-filters {
+    margin-bottom: 2rem;
+  }
+  
+  .tabs ul {
+    border-bottom-color: #E03A3E;
+  }
+  
+  .tabs li.is-active a {
+    border-bottom-color: #E03A3E;
+    color: #E03A3E;
+  }
+  
+  .tabs a {
+    transition: color 0.2s ease;
+  }
+  
+  .tabs a:hover {
+    color: #E03A3E;
+  }
+</style> 

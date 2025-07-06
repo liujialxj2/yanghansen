@@ -1,6 +1,6 @@
-import heroFields from '../../lib/schema-mixins/hero-fields.js';
+const heroFields = require('../../lib/schema-mixins/hero-fields.js');
 
-export default {
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Hero Section',

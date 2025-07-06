@@ -1,6 +1,6 @@
-import colorOptionsHelper from '../../lib/helpers/color-options.js';
+const colorOptionsHelper = require('../../lib/helpers/color-options.js');
 
-export default {
+module.exports = {
   layout: {
     type: 'select',
     label: 'Layout Style',

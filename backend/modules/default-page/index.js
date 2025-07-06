@@ -1,6 +1,6 @@
-import { getWidgetGroups } from '../../lib/helpers/area-widgets.js';
+const { getWidgetGroups } = require('../../lib/helpers/area-widgets.js');
 
-export default {
+module.exports = {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Default Page'

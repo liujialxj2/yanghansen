@@ -1,5 +1,5 @@
 // Define our available widgets grouped by type
-export const widgetGroups = {
+const widgetGroups = {
   // Layout widgets are structural elements that help organize content
   layout: {
     label: 'Layout',
@@ -53,7 +53,7 @@ export const widgetGroups = {
  *   }
  * }
  */
-export const getWidgetGroups = ({
+const getWidgetGroups = ({
   includeLayouts = false,
   exclude = []
 } = {}) => {
@@ -89,3 +89,5 @@ export const getWidgetGroups = ({
     groups
   };
 };
+
+module.exports = { getWidgetGroups };

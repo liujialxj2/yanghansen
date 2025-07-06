@@ -1,7 +1,7 @@
-import colorOptionsHelper from '../../lib/helpers/color-options.js';
-import { getWidgetGroups } from '../../lib/helpers/area-widgets.js';
+const colorOptionsHelper = require('../../lib/helpers/color-options.js');
+const { getWidgetGroups } = require('../../lib/helpers/area-widgets.js');
 
-export default {
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Accordion',

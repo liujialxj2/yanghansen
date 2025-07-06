@@ -1,0 +1,153 @@
+---
+import { t } from "i18next";
+import { localizePath } from "astro-i18next";
+import { getAttachmentUrl } from '../lib/attachments';
+import dayjs from 'dayjs';
+
+interface Props {
+  articles: any[];
+}
+
+// 获取文章，如果没有数据则使用模拟数据
+const { articles = [] } = Astro.props;
+
+// 最多显示3篇文章
+const displayArticles = articles.length > 0 
+  ? articles.slice(0, 3) 
+  : [
+    { 
+      _id: '1', 
+      title: '杨瀚森首次NBA首发出战砍下18分6助攻', 
+      publicationDate: '2023-11-20',
+      _url: '/articles/first-nba-start',
+      authorName: '体育记者'
+    },
+    { 
+      _id: '2', 
+      title: '赛后采访：我一直梦想着这一刻', 
+      publicationDate: '2023-11-18',
+      _url: '/articles/post-game-interview',
+      authorName: '球队记者'
+    },
+    { 
+      _id: '3', 
+      title: '从CBA到NBA：杨瀚森的篮球之路', 
+      publicationDate: '2023-11-15',
+      _url: '/articles/basketball-journey',
+      authorName: '特约撰稿人'
+    }
+  ];
+---
+
+<div class="news-section">
+  <div class="section-header">
+    <h2 class="title is-3">{t("home.news.title")}</h2>
+    <a href={localizePath("/articles")} class="view-all">
+      {t("home.news.viewAll")}
+      <span class="icon"><i class="fas fa-arrow-right"></i></span>
+    </a>
+  </div>
+  
+  <div class="columns is-multiline">
+    {displayArticles.map(article => (
+      <div class="column is-4">
+        <div class="card">
+          <div class="card-content">
+            <p class="article-date">
+              {dayjs(article.publicationDate).format('YYYY.MM.DD')}
+            </p>
+            <h3 class="article-title">
+              <a href={article._url}>{article.title}</a>
+            </h3>
+            <p class="article-author">{article.authorName}</p>
+          </div>
+          <div class="card-footer">
+            <a href={article._url} class="card-footer-item">
+              {t("article.readMore")}
+              <span class="icon"><i class="fas fa-chevron-right"></i></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .news-section {
+    margin: 4rem 0 2rem;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .view-all {
+    display: flex;
+    align-items: center;
+    color: #E03A3E;
+    font-weight: 500;
+  }
+  
+  .view-all .icon {
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .view-all:hover .icon {
+    transform: translateX(3px);
+  }
+  
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-content {
+    flex-grow: 1;
+    padding: 1.5rem;
+  }
+  
+  .article-date {
+    font-size: 0.9rem;
+    color: #E03A3E;
+    margin-bottom: 0.5rem;
+  }
+  
+  .article-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+  
+  .article-title a {
+    color: #f5f5f5;
+    transition: color 0.2s ease;
+  }
+  
+  .article-title a:hover {
+    color: #E03A3E;
+  }
+  
+  .article-author {
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  .card-footer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f5f5f5;
+  }
+  
+  .card-footer-item:hover {
+    background-color: rgba(224, 58, 62, 0.1);
+    color: #E03A3E;
+  }
+</style> 

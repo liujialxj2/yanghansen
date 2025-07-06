@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   options: {
     label: 'Image',
     description: 'Display images on your page',

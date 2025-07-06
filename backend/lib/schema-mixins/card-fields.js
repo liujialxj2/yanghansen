@@ -1,7 +1,7 @@
-import colorOptionsHelper from '../helpers/color-options.js';
-import textOptionsHelper from '../helpers/typography-options.js';
+const colorOptionsHelper = require('../helpers/color-options.js');
+const textOptionsHelper = require('../helpers/typography-options.js');
 
-export const cardFields = {
+const cardFields = {
   cardType: {
     type: 'select',
     label: 'Card Type',
@@ -244,7 +244,7 @@ export const cardFields = {
   }
 };
 
-export const cardGroups = {
+const cardGroups = {
   basics: {
     label: 'Basic Settings',
     fields: ['cardType']

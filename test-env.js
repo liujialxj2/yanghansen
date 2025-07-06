@@ -1,0 +1,1 @@
+console.log('APOS_EXTERNAL_FRONT_KEY:', process.env.APOS_EXTERNAL_FRONT_KEY); 

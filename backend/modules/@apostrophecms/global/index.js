@@ -1,7 +1,7 @@
-import colorOptionsHelper from '../../../lib/helpers/color-options.js';
-import textSizeHelper from '../../../lib/helpers/typography-options.js';
+const colorOptionsHelper = require('../../../lib/helpers/color-options.js');
+const textSizeHelper = require('../../../lib/helpers/typography-options.js');
 
-export default {
+module.exports = {
   fields: {
     add: {
       brandingGroup: {

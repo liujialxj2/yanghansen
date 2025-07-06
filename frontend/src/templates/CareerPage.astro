@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatImageUrl } from '../lib/apos';
+import { t } from 'i18next';
+import { Trans } from 'astro-i18next/components';
+
+// 获取页面数据
+const { data } = Astro.props;
+const page = data?.page || {};
+const title = page.title || t('career.title');
+const main = page.main || {};
+const timeline = page.timeline || {};
+---
+
+<BaseLayout title={title}>
+  <section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-1">{title}</h1>
+        <h2 class="subtitle">
+          <Trans i18nKey="career.subtitle">
+            职业生涯 | Career Journey
+          </Trans>
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-8 is-offset-2">
+          <!-- 主要内容区域 -->
+          {main.items && main.items.length > 0 && (
+            <div class="content">
+              {main.items.map((widget) => (
+                <Astro.slots.render name={`main:${widget.type}`} widget={widget} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 时间轴区域 -->
+  <section class="section has-background-dark">
+    <div class="container">
+      <h2 class="title is-2 has-text-centered has-text-white mb-6">
+        <Trans i18nKey="career.timeline.title">
+          职业生涯里程碑
+        </Trans>
+      </h2>
+      
+      {timeline.items && timeline.items.length > 0 && (
+        <div class="timeline-container">
+          {timeline.items.map((widget) => (
+            <Astro.slots.render name={`timeline:${widget.type}`} widget={widget} />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- 统计数据区域 -->
+  <section class="section">
+    <div class="container">
+      <h2 class="title is-2 has-text-centered mb-6">
+        <Trans i18nKey="career.stats.title">
+          职业数据
+        </Trans>
+      </h2>
+      
+      <div class="columns is-multiline">
+        <div class="column is-3">
+          <div class="box has-text-centered">
+            <p class="title is-1 has-text-primary">14.2</p>
+            <p class="subtitle is-5">
+              <Trans i18nKey="home.stats.ppg">场均得分</Trans>
+            </p>
+          </div>
+        </div>
+        
+        <div class="column is-3">
+          <div class="box has-text-centered">
+            <p class="title is-1 has-text-primary">5.8</p>
+            <p class="subtitle is-5">
+              <Trans i18nKey="home.stats.rpg">场均篮板</Trans>
+            </p>
+          </div>
+        </div>
+        
+        <div class="column is-3">
+          <div class="box has-text-centered">
+            <p class="title is-1 has-text-primary">3.2</p>
+            <p class="subtitle is-5">
+              <Trans i18nKey="home.stats.apg">场均助攻</Trans>
+            </p>
+          </div>
+        </div>
+        
+        <div class="column is-3">
+          <div class="box has-text-centered">
+            <p class="title is-1 has-text-primary">1.1</p>
+            <p class="subtitle is-5">
+              <Trans i18nKey="career.stats.spg">场均抢断</Trans>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="has-text-centered mt-5">
+        <a href="/stats" class="button is-primary is-medium">
+          <Trans i18nKey="home.stats.viewFull">查看完整数据</Trans>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .timeline-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 0;
+  }
+  
+  .timeline-container::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: #E03A3E;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -2px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .timeline-container::after {
+      left: 31px;
+    }
+  }
+</style> 

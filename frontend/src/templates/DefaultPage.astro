@@ -1,8 +1,36 @@
 ---
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
-const { page, user, query } = Astro.props.aposData;
-const { main } = page;
+
+const { aposData } = Astro.props;
+const { page, global } = aposData;
 ---
-<section class="main-content astro-default-content">
-  <AposArea area={main} />
+
+<div class="default-page">
+  <section class="section page-content">
+    <div class="container">
+      <h1 class="title is-2 mb-5">{page.title}</h1>
+      <AposArea area={page.main} />
+    </div>
 </section>
+</div>
+
+<style>
+  .default-page {
+    padding-top: 2rem;
+  }
+  
+  .title {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+  
+  .title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background-color: #E03A3E;
+  }
+</style>

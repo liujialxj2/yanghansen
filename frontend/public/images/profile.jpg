@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <rect width="600" height="800" fill="#1A1A1A"/>
+  <circle cx="300" cy="250" r="150" fill="#333333"/>
+  <text x="300" y="250" font-family="Arial" font-size="36" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">Hansen Yang</text>
+  <text x="300" y="300" font-family="Arial" font-size="24" fill="#E03A3E" text-anchor="middle" dominant-baseline="middle">杨瀚森</text>
+  <rect x="100" y="450" width="400" height="300" fill="#333333"/>
+  <text x="300" y="600" font-family="Arial" font-size="24" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">Profile Photo</text>
+</svg>

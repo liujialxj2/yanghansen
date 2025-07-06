@@ -1,0 +1,296 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLangInfo } from '../../lib/multilingual';
+import { t } from "i18next";
+import dayjs from 'dayjs';
+
+// 获取语言信息
+const { lang } = getLangInfo(Astro.url);
+
+// 获取URL参数
+const { slug } = Astro.params;
+
+// 模拟从API获取文章详情（此处应根据slug从数据库获取）
+const article = {
+  _id: '1', 
+  title: '杨瀚森首次NBA首发出战砍下18分6助攻', 
+  summary: '开拓者队新秀杨瀚森在对阵国王的比赛中首次获得首发机会，全场砍下18分6助攻，展现出不俗的组织能力和进攻火力。',
+  content: `
+  <p class="lead">2025年11月19日，波特兰开拓者队在主场迎战萨克拉门托国王队的比赛中，中国新秀杨瀚森首次获得NBA首发机会，他在这场比赛中打出了令人印象深刻的表现。</p>
+  
+  <p>杨瀚森全场34分钟内得到18分6篮板6助攻2抢断，投篮命中率达到了7/13，其中三分球3投2中，展示了不俗的得分效率。更令人瞩目的是，他在比赛关键时刻的表现尤为出色，第四节独得8分，帮助球队锁定胜局。</p>
+  
+  <h3>出色的组织能力</h3>
+  
+  <p>作为一名2.05米的大个子控卫，杨瀚森在比赛中展示了他独特的传球视野。开拓者主教练瑞克·卡莱尔赛后评价道："杨的传球让我想起了一些欧洲的传奇球员，他有着与身高不相符的球场视野和传球技巧。今晚我们看到了他的潜力，尽管他还需要时间去适应NBA的节奏。"</p>
+  
+  <p>杨瀚森的6次助攻中，有4次是为队友创造了三分机会，尤其是与队友安芬尼·西蒙斯的挡拆配合令对手防不胜防。</p>
+  
+  <h3>进攻火力展示</h3>
+  
+  <p>除了组织进攻外，杨瀚森自己的得分能力也得到了充分展示。他在比赛中多次通过突破完成上篮，同时外线投射也具有相当的威胁。国王队主教练迈克·布朗表示："我们在防守计划中低估了这名新秀的得分能力，他的投射范围和终结能力比我们预想的要好。"</p>
+  
+  <p>值得一提的是，杨瀚森在上半场就已经得到10分4助攻，展现了他适应NBA比赛的快速能力。</p>
+  
+  <h3>首发意义</h3>
+  
+  <p>作为2025年NBA选秀大会第8顺位球员，杨瀚森是历史上第一位在选秀大会首轮前十顺位被选中的中国球员。他的首发出场意味着开拓者队对他的信任和期望。</p>
+  
+  <p>开拓者队总经理乔·克罗宁在赛前接受采访时表示："杨是我们重建计划中的重要一环。我们相信他有能力在联盟中成为一名出色的球员，今晚给他首发机会是我们一直以来计划的一部分。"</p>
+  
+  <h3>后续展望</h3>
+  
+  <p>根据开拓者队的赛程安排，球队将在本周五迎战丹佛掘金队。届时杨瀚森将有机会与联盟顶级中锋约基奇直接对话，这将是对他防守能力的一次重要检验。</p>
+  
+  <p>杨瀚森赛后表示："我对自己的首秀表现比较满意，但还有很多需要提高的地方。NBA的比赛节奏和强度与我以前经历的不同，我需要继续调整和适应。我期待着下一场比赛的挑战。"</p>
+  `,
+  publicationDate: '2025-11-20',
+  authorName: '体育记者',
+  authorBio: '资深篮球记者，专注于NBA和中国球员报道',
+  category: 'news',
+  tags: ['NBA', '波特兰开拓者', '首秀', '比赛报道']
+};
+
+// 准备页面标题
+const title = article.title;
+
+// 相关文章（模拟数据）
+const relatedArticles = [
+  { 
+    _id: '2', 
+    title: '赛后采访：我一直梦想着这一刻', 
+    publicationDate: '2025-11-18',
+    _url: '/articles/post-game-interview',
+    authorName: '球队记者'
+  },
+  { 
+    _id: '3', 
+    title: '从CBA到NBA：杨瀚森的篮球之路', 
+    publicationDate: '2025-11-15',
+    _url: '/articles/basketball-journey',
+    authorName: '特约撰稿人'
+  },
+  { 
+    _id: '4', 
+    title: '技术分析：杨瀚森的传球视野有多出色？', 
+    publicationDate: '2025-11-10',
+    _url: '/articles/passing-vision-analysis',
+    authorName: '篮球分析师'
+  }
+];
+---
+
+<BaseLayout title={title}>
+  <div class="article-detail">
+    <section class="section pt-5 pb-2">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+          <ul>
+            <li><a href="/">{t('common.home')}</a></li>
+            <li><a href="/articles">{t('common.news')}</a></li>
+            <li class="is-active"><a href="#" aria-current="page">{article.title}</a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+    
+    <section class="section pt-2">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-8">
+            <!-- 文章头部 -->
+            <div class="article-header">
+              <h1 class="title is-2">{article.title}</h1>
+              <div class="article-meta">
+                <div class="author-date">
+                  <span class="author">{t('articles.by')} {article.authorName}</span>
+                  <span class="date">{dayjs(article.publicationDate).format('YYYY.MM.DD')}</span>
+                </div>
+                <div class="tags">
+                  <span class="tag is-danger">{t(`articles.categories.${article.category}`)}</span>
+                  {article.tags.map(tag => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              
+              <p class="article-summary">{article.summary}</p>
+            </div>
+            
+            <!-- 文章内容 -->
+            <div class="article-content content">
+              <Fragment set:html={article.content} />
+            </div>
+            
+            <!-- 文章底部 -->
+            <div class="article-footer">
+              <div class="share-section">
+                <h4 class="title is-5">{t('articles.share')}</h4>
+                <div class="buttons">
+                  <button class="button is-outlined">
+                    <span class="icon"><i class="fab fa-weibo"></i></span>
+                    <span>{t('common.shareOn')} Weibo</span>
+                  </button>
+                  <button class="button is-outlined">
+                    <span class="icon"><i class="fab fa-weixin"></i></span>
+                    <span>{t('common.shareOn')} WeChat</span>
+                  </button>
+                  <button class="button is-outlined">
+                    <span class="icon"><i class="fab fa-twitter"></i></span>
+                    <span>{t('common.shareOn')} Twitter</span>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="author-bio">
+                <h4 class="title is-5">{t('articles.aboutAuthor')}</h4>
+                <p>{article.authorBio}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="column is-4">
+            <!-- 相关文章 -->
+            <div class="related-articles">
+              <h3 class="title is-4">{t('articles.related')}</h3>
+              
+              <div class="related-articles-list">
+                {relatedArticles.map(relatedArticle => (
+                  <div class="related-article-item">
+                    <a href={relatedArticle._url}>
+                      <h4 class="related-title">{relatedArticle.title}</h4>
+                      <div class="related-meta">
+                        <span class="related-author">{relatedArticle.authorName}</span>
+                        <span class="related-date">{dayjs(relatedArticle.publicationDate).format('YYYY.MM.DD')}</span>
+                      </div>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .article-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0 1.5rem;
+  }
+  
+  .author-date {
+    color: #666;
+  }
+  
+  .author {
+    font-weight: 500;
+    margin-right: 1rem;
+  }
+  
+  .date {
+    color: #888;
+  }
+  
+  .article-summary {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #444;
+    font-weight: 300;
+    margin-top: 1.5rem;
+  }
+  
+  .article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  
+  .article-content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .article-content p {
+    margin-bottom: 1.5rem;
+  }
+  
+  .article-content .lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: #333;
+  }
+  
+  .article-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .share-section {
+    margin-bottom: 2rem;
+  }
+  
+  .author-bio {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+  }
+  
+  .related-articles {
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .related-article-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .related-article-item:last-child {
+    border-bottom: none;
+  }
+  
+  .related-title {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s ease;
+  }
+  
+  .related-article-item:hover .related-title {
+    color: #E03A3E;
+  }
+  
+  .related-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #888;
+  }
+  
+  /* 响应式调整 */
+  @media screen and (max-width: 768px) {
+    .article-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .author-date {
+      margin-bottom: 1rem;
+    }
+  }
+</style> 

@@ -1,6 +1,6 @@
-import colorOptionsHelper from '../helpers/color-options.js';
+const colorOptionsHelper = require('../helpers/color-options.js');
 
-export default {
+module.exports = {
   linkText: {
     label: 'Link/Button Text',
     type: 'string',

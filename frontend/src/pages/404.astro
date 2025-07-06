@@ -1,0 +1,50 @@
+---
+import { t } from "i18next";
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="404 - Page Not Found" page={{}}>
+  <div class="error-page">
+    <div class="container">
+      <div class="content has-text-centered">
+        <h1 class="title is-1">404</h1>
+        <h2 class="subtitle is-3">页面未找到 | Page Not Found</h2>
+        <p>您请求的页面不存在或已被移动到其他位置。</p>
+        <p>The page you requested does not exist or has been moved to another location.</p>
+        
+        <div class="buttons is-centered mt-6">
+          <a href="/" class="button is-primary">
+            <span class="icon">
+              <i class="fas fa-home"></i>
+            </span>
+            <span>返回首页 | Back to Home</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .error-page {
+    padding: 5rem 1.5rem;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .title {
+    font-size: 6rem;
+    color: #E03A3E;
+  }
+  
+  .subtitle {
+    margin-bottom: 2rem;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+</style> 

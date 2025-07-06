@@ -6,11 +6,13 @@ import astroI18next from 'astro-i18next';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'http://localhost:4321',
   output: "server",
   server: {
-    port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
-    // Required for some hosting, like Heroku
-    // host: true
+    port: 4321,
+    host: true,
+    // 如果端口被占用，不要自动切换到其他端口
+    strictPort: true
   },
   adapter: node({
     mode: 'standalone'
@@ -51,9 +53,16 @@ export default defineConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          quietDeps: true
+          quietDeps: true,
+          includePaths: [
+            path.resolve('./node_modules')
+          ]
         }
       }
+    },
+    server: {
+      strictPort: true,
+      port: 4321
     },
     ssr: {
       // Do not externalize the @apostrophecms/apostrophe-astro plugin, we need

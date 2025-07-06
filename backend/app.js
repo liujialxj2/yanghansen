@@ -1,7 +1,13 @@
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import apostrophe from 'apostrophe';
 
+// 获取当前文件的目录路径
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export default apostrophe({
-  root: import.meta,
+  root: __dirname,
   shortName: 'apollo',
   modules: {
     // Apostrophe module configuration
@@ -31,10 +37,13 @@ export default apostrophe({
     article: {},
     author: {},
     'career-stats-piece': {},
+    'personal-info-piece': {},
+    'video-content-piece': {},
 
     // pages
     'default-page': {},
     'article-page': {},
+    'about-page': {},
 
     // widgets
     'grid-layout-widget': {},
@@ -43,6 +52,7 @@ export default apostrophe({
     'hero-widget': {},
     'link-widget': {},
     'slideshow-widget': {},
-    'rows-widget': {}
+    'rows-widget': {},
+    'stats-widget': {}
   }
 });

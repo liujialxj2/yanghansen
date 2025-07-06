@@ -1,0 +1,78 @@
+---
+import { t } from "i18next";
+
+// 模拟数据 - 在实际项目中，这些数据应该从CMS中获取
+const statsData = {
+  ppg: "16.4",
+  apg: "7.2",
+  rpg: "3.8",
+  spg: "1.5"
+};
+
+const statItems = [
+  { key: "ppg", icon: "fas fa-basketball-ball" },
+  { key: "apg", icon: "fas fa-hands-helping" },
+  { key: "rpg", icon: "fas fa-arrows-alt" },
+  { key: "spg", icon: "fas fa-hand-rock" }
+];
+---
+
+<div class="stats-section">
+  <h2 class="title is-3 has-text-centered mb-6">{t("home.stats.title")}</h2>
+  
+  <div class="columns is-multiline">
+    {statItems.map(item => (
+      <div class="column is-3-desktop is-6-tablet">
+        <div class="stat-item">
+          <div class="icon-container">
+            <span class="icon">
+              <i class={item.icon}></i>
+            </span>
+          </div>
+          <div class="stat-value">{statsData[item.key]}</div>
+          <div class="stat-label">{t(`home.stats.${item.key}`)}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .stats-section {
+    margin: 4rem 0;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+  
+  .stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    height: 100%;
+  }
+  
+  .icon-container {
+    margin-bottom: 1rem;
+  }
+  
+  .icon-container .icon {
+    font-size: 2rem;
+    color: #E03A3E;
+  }
+  
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #E03A3E;
+    margin-bottom: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .stat-label {
+    font-size: 1rem;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+</style> 

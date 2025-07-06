@@ -1,0 +1,236 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLangInfo } from '../../lib/multilingual';
+import { t } from "i18next";
+import dayjs from 'dayjs';
+
+const { lang } = getLangInfo(Astro.url);
+const title = lang === 'zh' ? '新闻' : 'News';
+
+// 假设这些数据会从后端API获取
+const articles = [
+  { 
+    _id: '1', 
+    title: '杨瀚森首次NBA首发出战砍下18分6助攻', 
+    summary: '开拓者队新秀杨瀚森在对阵国王的比赛中首次获得首发机会，全场砍下18分6助攻，展现出不俗的组织能力和进攻火力。',
+    publicationDate: '2025-11-20',
+    _url: '/articles/first-nba-start',
+    authorName: '体育记者',
+    category: 'news'
+  },
+  { 
+    _id: '2', 
+    title: '赛后采访：我一直梦想着这一刻', 
+    summary: '在NBA首秀后，杨瀚森接受了媒体的采访，他表示："从小就梦想着能够在NBA舞台上证明自己，这是我篮球生涯的重要里程碑。"',
+    publicationDate: '2025-11-18',
+    _url: '/articles/post-game-interview',
+    authorName: '球队记者',
+    category: 'interviews'
+  },
+  { 
+    _id: '3', 
+    title: '从CBA到NBA：杨瀚森的篮球之路', 
+    summary: '作为第一位从CBA直接选秀进入NBA的中国球员，杨瀚森的成长故事激励了无数年轻球员。本文回顾了他从青岛到波特兰的篮球之旅。',
+    publicationDate: '2025-11-15',
+    _url: '/articles/basketball-journey',
+    authorName: '特约撰稿人',
+    category: 'features'
+  },
+  { 
+    _id: '4', 
+    title: '技术分析：杨瀚森的传球视野有多出色？', 
+    summary: '本文通过数据和视频分析，详细解读杨瀚森在球场上的传球决策和视野，以及他如何利用这一优势为球队创造进攻机会。',
+    publicationDate: '2025-11-10',
+    _url: '/articles/passing-vision-analysis',
+    authorName: '篮球分析师',
+    category: 'analysis'
+  },
+  { 
+    _id: '5', 
+    title: '杨瀚森与开拓者达成四年rookie合同', 
+    summary: '波特兰开拓者队今日宣布，球队已与2025年NBA选秀大会第8顺位新秀杨瀚森正式签约，根据球队政策，合同细节未被披露。',
+    publicationDate: '2025-07-10',
+    _url: '/articles/rookie-contract',
+    authorName: '体育记者',
+    category: 'news'
+  },
+  { 
+    _id: '6', 
+    title: '专访：杨瀚森谈NBA选秀与未来规划', 
+    summary: '在被波特兰开拓者队选中后，杨瀚森接受了独家专访，分享了他对未来NBA生涯的期望和规划，以及他如何准备应对职业生涯的挑战。',
+    publicationDate: '2025-06-30',
+    _url: '/articles/exclusive-interview',
+    authorName: '资深记者',
+    category: 'interviews'
+  }
+];
+---
+
+<BaseLayout title={title}>
+  <section class="hero is-medium has-background-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title has-text-white is-2">{t('articles.pageTitle')}</h1>
+        <p class="subtitle has-text-grey-light">{t('articles.pageSubtitle')}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- 文章分类筛选 -->
+      <div class="article-filters mb-5">
+        <div class="buttons">
+          <button class="button is-primary is-active">{t('articles.filters.all')}</button>
+          <button class="button">{t('articles.categories.news')}</button>
+          <button class="button">{t('articles.categories.interviews')}</button>
+          <button class="button">{t('articles.categories.features')}</button>
+          <button class="button">{t('articles.categories.analysis')}</button>
+        </div>
+      </div>
+
+      <!-- 文章列表 -->
+      <div class="articles-grid">
+        {articles.map(article => (
+          <div class="article-card">
+            <div class="card">
+              <div class="card-content">
+                <p class="article-meta">
+                  <span class="article-date">{dayjs(article.publicationDate).format('YYYY.MM.DD')}</span>
+                  <span class="article-category">{t(`articles.categories.${article.category}`)}</span>
+                </p>
+                <h3 class="article-title">
+                  <a href={article._url}>{article.title}</a>
+                </h3>
+                <p class="article-summary">{article.summary}</p>
+                <p class="article-author">{t('articles.by')} {article.authorName}</p>
+              </div>
+              <div class="card-footer">
+                <a href={article._url} class="card-footer-item">
+                  {t('articles.readMore')}
+                  <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- 分页 -->
+      <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <a class="pagination-previous">{t('common.previous')}</a>
+        <a class="pagination-next">{t('common.next')}</a>
+        <ul class="pagination-list">
+          <li><a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a></li>
+          <li><a class="pagination-link" aria-label="Go to page 2">2</a></li>
+          <li><a class="pagination-link" aria-label="Go to page 3">3</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .article-filters {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .article-filters .button {
+    margin-right: 0.5rem;
+  }
+  
+  .article-filters .button.is-active {
+    background-color: #E03A3E;
+  }
+  
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .article-card .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .article-card .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+  
+  .article-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+  
+  .article-date {
+    font-size: 0.85rem;
+    color: #888;
+  }
+  
+  .article-category {
+    font-size: 0.85rem;
+    color: #E03A3E;
+    font-weight: 500;
+  }
+  
+  .article-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+  
+  .article-title a {
+    color: #333;
+    transition: color 0.2s ease;
+  }
+  
+  .article-title a:hover {
+    color: #E03A3E;
+  }
+  
+  .article-summary {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .article-author {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: auto;
+  }
+  
+  .card-content {
+    flex-grow: 1;
+  }
+  
+  .card-footer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-footer-item:hover {
+    background-color: rgba(224, 58, 62, 0.1);
+    color: #E03A3E;
+  }
+  
+  .pagination {
+    margin-top: 3rem;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .articles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style> 

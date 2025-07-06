@@ -62,4 +62,4 @@ const textOptionsHelper = {
   }
 };
 
-export default textOptionsHelper;
+module.exports = textOptionsHelper;

@@ -1,133 +1,177 @@
 ---
-import setParameter from '@apostrophecms/apostrophe-astro/lib/aposSetQueryParameter.js';
+import { t } from "i18next";
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
+import dayjs from 'dayjs';
 
-import Pagination from '../components/Pagination.astro';
-
-import HeroGrid from '../layouts/article-layouts/HeroGrid.astro';
-import ListAside from '../layouts/article-layouts/ListAside.astro';
-import Standard from '../layouts/article-layouts/Standard.astro';
-
-const {
-  page,
-  user,
-  query,
-  piecesFilters = [],
-  pieces,
-  currentPage,
-  totalPages
-} = Astro.props.aposData;
-
-const pages = [];
-for (let i = 1; i <= totalPages; i++) {
-  pages.push({
-    number: i,
-    current: i === currentPage,
-    url: setParameter(Astro.url, 'page', i)
-  });
-}
+const { aposData } = Astro.props;
+const { page, pieces, pager } = aposData;
 ---
-<section class='main-content content-index-page section'>
-  <div class='container'>
-    <h1 class="is-size-1">{page.title}</h1>
 
-    {/* Global Masthead - Shows for all layouts */}
-    {
-      page.masthead && (
-        <div class='container mb-6'>
-          <div class='content has-text-centered'>
-            <AposArea area={page.masthead} />
+<div class="articles-page">
+  <section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-2">{page.title}</h1>
           </div>
         </div>
-      )
-    }
-
-    {
-      Array.isArray(piecesFilters) && piecesFilters.length > 0 && (
-        <div class='tags are-medium mb-5'>
-          {piecesFilters.map((filter) => (
-            <a
-              href={filter.url}
-              class={`tag ${filter.active ? 'is-primary' : 'is-light'}`}
-            >
-              {filter.label}
-            </a>
+  </section>
+  
+  <section class="section">
+    <div class="container">
+      <AposArea area={page.beforeIndex} />
+      
+      <div class="articles">
+        <div class="columns is-multiline">
+          {pieces.map(article => (
+            <div class="column is-4">
+              <div class="card article-card">
+                {article.thumbnail && (
+                  <div class="card-image">
+                    <figure class="image is-3by2">
+                      <img 
+                        src={article.thumbnail._url} 
+                        alt={article.title} 
+                        loading="lazy" 
+                      />
+                    </figure>
+                  </div>
+                )}
+                <div class="card-content">
+                  <p class="article-date">
+                    {dayjs(article.publicationDate).format('YYYY.MM.DD')}
+                  </p>
+                  <h3 class="article-title">
+                    <a href={article._url}>{article.title}</a>
+                  </h3>
+                  <p class="article-author">{article.authorName}</p>
+                </div>
+                <div class="card-footer">
+                  <a href={article._url} class="card-footer-item">
+                    {t("article.readMore")}
+                    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                  </a>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
-      )
-    }
-
-    {/* Before Content Area */}
-    {page.beforeContent && (
-      <div class='mb-6'>
-        <AposArea area={page.beforeContent} />
       </div>
+      
+      <!-- 分页 -->
+      {pager && pager.pages > 1 && (
+        <nav class="pagination is-centered mt-6" role="navigation" aria-label="pagination">
+          {pager.page > 1 && (
+            <a href={pager.previous} class="pagination-previous">
+              <span class="icon"><i class="fas fa-chevron-left"></i></span>
+              上一页
+            </a>
     )}
 
-    {page.indexLayout === 'heroGrid' && (
-      <HeroGrid
-        pieces={pieces}
-        gridColumns={3}
-        heroImageClass="is-2by1"
-      />
-    )}
-
-    {page.indexLayout === 'listAside' && (
-    <ListAside
-      pieces={pieces}
-      sidebarWidth={4}
-      showRelated={true}
-      showAuthorAvatar={true}
-      sidebarArea={page.sidebarContent}
-    />
-    )}
-
-    {page.indexLayout === 'standard' && (
-    <Standard
-      pieces={pieces}
-      showImage={true}
-      imageWidth={4}
-      showAuthorAvatar={true}
-      excerptLength={200}
-    />
-    )}
-
-    {/* After Content Area */}
-    {page.afterContent && (
-      <div class='mt-6'>
-        <AposArea area={page.afterContent} />
-      </div>
-    )}
-
-  {totalPages > 1 && (
-    <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    url={Astro.url}
-    class="my-8"
-    />
+          {pager.page < pager.pages && (
+            <a href={pager.next} class="pagination-next">
+              下一页
+              <span class="icon"><i class="fas fa-chevron-right"></i></span>
+            </a>
+          )}
+          
+          <ul class="pagination-list">
+            {Array.from({ length: pager.pages }, (_, i) => (
+              <li>
+                <a 
+                  href={`${pager.url}?page=${i + 1}`} 
+                  class={`pagination-link ${pager.page === i + 1 ? 'is-current' : ''}`}
+                  aria-label={`转到第 ${i + 1} 页`}
+                  aria-current={pager.page === i + 1 ? 'page' : undefined}
+                >
+                  {i + 1}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
   )}
+      
+      <AposArea area={page.afterIndex} />
   </div>
 </section>
+</div>
+
 <style>
-.sticky-top {
-  position: sticky;
-  top: 1rem;
+  .hero {
+    background-color: #101010;
+  }
+  
+  .articles {
+    margin: 3rem 0;
+  }
+  
+  .article-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-content {
+    flex-grow: 1;
+    padding: 1.5rem;
 }
 
-.border-bottom {
-  border-bottom: 1px solid #dbdbdb;
+  .article-date {
+    font-size: 0.9rem;
+    color: #E03A3E;
+    margin-bottom: 0.5rem;
+  }
+  
+  .article-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+  
+  .article-title a {
+    color: #f5f5f5;
+    transition: color 0.2s ease;
+  }
+  
+  .article-title a:hover {
+    color: #E03A3E;
 }
 
-.has-shadow {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  border-radius: 0.375rem;
+  .article-author {
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  .card-footer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f5f5f5;
+  }
+  
+  .card-footer-item:hover {
+    background-color: rgba(224, 58, 62, 0.1);
+    color: #E03A3E;
+  }
+  
+  /* 分页样式 */
+  .pagination-link.is-current {
+    background-color: #E03A3E;
+    border-color: #E03A3E;
 }
-.object-fit-cover {
-  object-fit: cover;
+  
+  .pagination-previous,
+  .pagination-next,
+  .pagination-link {
+    background-color: #1A1A1A;
+    border-color: #333;
+    color: #f5f5f5;
 }
 
-.h-100 {
-  height: 100%;
+  .pagination-previous:hover,
+  .pagination-next:hover,
+  .pagination-link:hover {
+    border-color: #E03A3E;
 }
 </style>

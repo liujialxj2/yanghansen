@@ -26,4 +26,4 @@ const colorOptionsHelper = {
   }
 };
 
-export default colorOptionsHelper;
+module.exports = colorOptionsHelper;

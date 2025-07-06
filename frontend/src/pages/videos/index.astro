@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLangInfo } from '../../lib/multilingual';
+import { t } from "i18next";
+import VideoGrid from '../../components/VideoGrid.astro';
+
+const { lang } = getLangInfo(Astro.url);
+const title = lang === 'zh' ? '视频' : 'Videos';
+
+// 假设这些数据会从后端API获取
+const videos = [];
+---
+
+<BaseLayout title={title}>
+  <section class="hero is-small has-background-dark">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title has-text-white">{t('videos.pageTitle')}</h1>
+        <p class="subtitle has-text-grey-light">{t('videos.pageSubtitle')}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- 视频分类筛选 -->
+      <div class="video-filters mb-5">
+        <div class="buttons">
+          <button class="button is-primary is-active">{t('videos.filters.all')}</button>
+          <button class="button">{t('videos.categories.highlights')}</button>
+          <button class="button">{t('videos.categories.interviews')}</button>
+          <button class="button">{t('videos.categories.training')}</button>
+          <button class="button">{t('videos.categories.behindScenes')}</button>
+        </div>
+      </div>
+
+      <!-- 视频列表 -->
+      <VideoGrid videos={videos} columns={3} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .video-filters {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .video-filters .button {
+    margin-right: 0.5rem;
+  }
+  
+  .video-filters .button.is-active {
+    background-color: #E03A3E;
+  }
+</style> 

@@ -1,20 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getLangInfo } from '../lib/multilingual';
+import { t } from "i18next";
+import NewsSection from '../components/NewsSection.astro';
+import HomeVideoSection from '../components/HomeVideoSection.astro';
 
 const { lang } = getLangInfo(Astro.url);
 const title = lang === 'zh' ? '首页' : 'Home';
+
+// 假设这些数据会从后端API获取
+const articles = [];
+const videos = [];
 ---
 
 <BaseLayout title={title}>
   <div class="hero is-fullheight-with-navbar has-hansenyoung-gradient">
     <div class="hero-body">
       <div class="container has-text-centered">
-        <h1 class="title is-1">{lang === 'zh' ? '杨瀚森官方网站' : 'Hansen Yang Official Website'}</h1>
-        <h2 class="subtitle is-3">{lang === 'zh' ? '中国篮球新星，波特兰开拓者队球员' : 'Chinese Basketball Star, Portland Trail Blazers Player'}</h2>
+        <h1 class="title is-1">{t('home.hero.title')}</h1>
+        <h2 class="subtitle is-3">{t('home.hero.subtitle')}</h2>
         <div class="mt-5">
-          <a href={lang === 'zh' ? '/about' : '/en/about'} class="button is-light is-large">
-            {lang === 'zh' ? '了解更多' : 'Learn More'}
+          <a href="/about" class="button is-light is-large">
+            {t('home.hero.cta')}
           </a>
         </div>
       </div>
@@ -23,16 +30,113 @@ const title = lang === 'zh' ? '首页' : 'Home';
   
   <section class="section">
     <div class="container">
-      <h2 class="title is-2 has-text-centered mb-6">
-        {lang === 'zh' ? '欢迎来到杨瀚森官方网站' : 'Welcome to Hansen Yang Official Website'}
-      </h2>
-      <div class="content has-text-centered">
-        <p class="is-size-5">
-          {lang === 'zh' 
-            ? '网站正在建设中，敬请期待更多内容。' 
-            : 'The website is under construction. Stay tuned for more content.'}
-        </p>
+      <!-- 统计数据 -->
+      <div class="stats-section">
+        <h2 class="title is-3 has-text-centered">{t('home.stats.title')}</h2>
+        <p class="subtitle has-text-centered mb-5">{t('home.stats.description')}</p>
+        
+        <div class="columns is-centered">
+          <div class="column is-3">
+            <div class="stat-card">
+              <div class="stat-value">16.6</div>
+              <div class="stat-label">{t('home.stats.points')}</div>
+              <div class="stat-trend positive">+1.6 {t('home.stats.vsPrevious')}</div>
+            </div>
+          </div>
+          <div class="column is-3">
+            <div class="stat-card">
+              <div class="stat-value">10.5</div>
+              <div class="stat-label">{t('home.stats.rebounds')}</div>
+              <div class="stat-trend negative">-0.3 {t('home.stats.vsPrevious')}</div>
+            </div>
+          </div>
+          <div class="column is-3">
+            <div class="stat-card">
+              <div class="stat-value">3.0</div>
+              <div class="stat-label">{t('home.stats.assists')}</div>
+              <div class="stat-trend negative">-0.9 {t('home.stats.vsPrevious')}</div>
+            </div>
+          </div>
+          <div class="column is-3">
+            <div class="stat-card">
+              <div class="stat-value">2.6</div>
+              <div class="stat-label">{t('home.stats.blocks')}</div>
+              <div class="stat-trend positive">+0.4 {t('home.stats.vsPrevious')}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+  
+  <section class="section">
+    <div class="container">
+      <!-- 新闻区块 -->
+      <NewsSection articles={articles} />
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="container">
+      <!-- 视频区块 -->
+      <HomeVideoSection videos={videos} />
+    </div>
+  </section>
 </BaseLayout> 
+
+<style>
+  .has-hansenyoung-gradient {
+    background: linear-gradient(to right bottom, #1D1C24, #0A0A0A);
+    color: white;
+  }
+  
+  .stats-section {
+    margin: 2rem 0 4rem;
+  }
+  
+  .stat-card {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #E03A3E;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+  }
+  
+  .stat-trend {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  
+  .positive {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: #27ae60;
+  }
+  
+  .negative {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+  }
+</style> 

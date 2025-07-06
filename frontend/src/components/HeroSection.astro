@@ -1,0 +1,67 @@
+---
+import { t } from "i18next";
+import { localizePath } from "astro-i18next";
+---
+
+<section class="hero is-dark is-fullheight-with-navbar has-bg-img">
+  <img 
+    src="/images/hero-bg.jpg" 
+    alt="Hansen Yang" 
+    class="hero-bg" 
+    loading="eager"
+  />
+  
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column is-6">
+          <h1 class="title is-1 has-text-weight-bold">
+            {t("home.hero.title")}
+          </h1>
+          <h2 class="subtitle is-3 mb-5">
+            {t("home.hero.subtitle")}
+          </h2>
+          <div class="buttons">
+            <a href={localizePath("/about")} class="button is-primary is-large">
+              {t("home.hero.cta")}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero.is-fullheight-with-navbar {
+    min-height: calc(100vh - 4rem);
+  }
+  
+  .hero-body {
+    padding: 6rem 1.5rem;
+  }
+  
+  .title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .subtitle {
+    opacity: 0.9;
+  }
+  
+  .button.is-primary {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .title {
+      font-size: 2.5rem;
+    }
+    
+    .subtitle {
+      font-size: 1.5rem !important;
+    }
+  }
+</style> 

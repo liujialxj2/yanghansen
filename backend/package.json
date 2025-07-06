@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app",
-    "dev": "APOS_EXTERNAL_FRONT_KEY=dev nodemon",
+    "dev": "APOS_EXTERNAL_FRONT_KEY=dev nodemon --experimental-modules",
     "build": "NODE_ENV=production node app @apostrophecms/asset:build",
     "serve": "NODE_ENV=production node app",
     "release": "npm install && npm run build && npm run migrate",
