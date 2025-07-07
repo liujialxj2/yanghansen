@@ -1,0 +1,6 @@
+[submodule "apollo-project/backend"]
+	path = apollo-project/backend
+	url = https://github.com/apostrophecms/apollo
+[submodule "apollo-project/frontend"]
+	path = apollo-project/frontend
+	url = https://github.com/apostrophecms/astro-frontend
